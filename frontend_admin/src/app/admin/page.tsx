@@ -18,6 +18,17 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { API_URL } from "@/lib/api-client";
+import { getSiteSettings } from "@/lib/actions/settings";
+import { getStats } from "@/lib/actions/stats";
+import { getTimeline } from "@/lib/actions/timeline";
+import { getExperiences } from "@/lib/actions/experience";
+import { getSkillCategories } from "@/lib/actions/skills";
+import { getProjects } from "@/lib/actions/projects";
+import { getCertificates } from "@/lib/actions/certificates";
+import { getBlogPosts } from "@/lib/actions/blog";
+import { getMessages } from "@/lib/actions/messages";
+
 interface Stats {
   projects: number;
   certificates: number;
@@ -42,6 +53,7 @@ export default function AdminOverview() {
   const [config, setConfig] = useState<LiveConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [dbMode, setDbMode] = useState<"supabase" | "fallback" | "offline">("offline");
 
   useEffect(() => {
     fetchDashboardData();
@@ -49,32 +61,49 @@ export default function AdminOverview() {
 
   async function fetchDashboardData() {
     setRefreshing(true);
+    setLoading(true);
     try {
-      const { createClient } = await import("@/lib/supabase/client");
-      const supabase = createClient();
+      // 1. Check Backend Health & Database Mode
+      let mode: "supabase" | "fallback" | "offline" = "offline";
+      try {
+        const healthUrl = API_URL.replace(/\/api$/, "/health");
+        const healthRes = await fetch(healthUrl, { cache: "no-store" });
+        if (healthRes.ok) {
+          const healthData = await healthRes.json();
+          mode = healthData.db_mode || "supabase";
+        }
+      } catch (err) {
+        console.error("Backend health check failed:", err);
+      }
+      setDbMode(mode);
 
-      // 1. Fetch counts
-      const [projects, certificates, blogPosts, messages] = await Promise.all([
-        supabase.from("projects").select("*", { count: "exact", head: true }),
-        supabase.from("certificates").select("*", { count: "exact", head: true }),
-        supabase.from("blog_posts").select("*", { count: "exact", head: true }),
-        supabase.from("messages").select("*", { count: "exact", head: true }).eq("read", false),
-      ]);
+      if (mode === "offline") {
+        setStats({ projects: 0, certificates: 0, blogPosts: 0, messages: 0 });
+        setTables([]);
+        setConfig(null);
+        return;
+      }
+
+      // 2. Fetch counts & settings via Express API action helpers
+      let projectsList: any[] = [];
+      let certificatesList: any[] = [];
+      let blogPostsList: any[] = [];
+      let messagesList: any[] = [];
+      let settings: any = null;
+
+      try { projectsList = await getProjects(false); } catch (e) { console.error(e); }
+      try { certificatesList = await getCertificates(); } catch (e) { console.error(e); }
+      try { blogPostsList = await getBlogPosts(false); } catch (e) { console.error(e); }
+      try { messagesList = await getMessages(); } catch (e) { console.error(e); }
+      try { settings = await getSiteSettings(); } catch (e) { console.error(e); }
 
       setStats({
-        projects: projects.count || 0,
-        certificates: certificates.count || 0,
-        blogPosts: blogPosts.count || 0,
-        messages: messages.count || 0,
+        projects: projectsList.length,
+        certificates: certificatesList.length,
+        blogPosts: blogPostsList.length,
+        messages: messagesList.filter((m) => !m.read).length,
       });
 
-      // 2. Fetch live settings summary
-      const { data: settings } = await supabase
-        .from("site_settings")
-        .select("site_name, site_title, is_open_to_opportunities")
-        .eq("id", "default")
-        .single();
-        
       if (settings) {
         setConfig({
           siteName: settings.site_name,
@@ -83,24 +112,34 @@ export default function AdminOverview() {
         });
       }
 
-      // 3. Perform diagnostic table checks
-      const tableNames = [
-        "profiles", "projects", "certificates", "blog_posts", "messages",
-        "site_settings", "stats", "timeline", "experiences", "skill_categories"
+      // 3. Table diagnostics via API checking
+      const tablesToCheck = [
+        { name: "site_settings", check: () => getSiteSettings() },
+        { name: "stats", check: () => getStats() },
+        { name: "timeline", check: () => getTimeline() },
+        { name: "experiences", check: () => getExperiences() },
+        { name: "skill_categories", check: () => getSkillCategories() },
+        { name: "projects", check: () => getProjects(false) },
+        { name: "certificates", check: () => getCertificates() },
+        { name: "blog_posts", check: () => getBlogPosts(false) },
+        { name: "messages", check: () => getMessages() },
       ];
 
-      const checkPromises = tableNames.map(async (name) => {
-        const { error } = await supabase.from(name).select("*").limit(1);
-        // If PGRST116 (single item missing) or no error, table exists.
-        // If the error code indicates relation does not exist (typically 42P01), table is missing.
-        // In Supabase postgrest, relation missing usually returns a 404 status / code 'PGRST116' is not table missing,
-        // but table missing returns a code like '42P01'.
-        const code = error?.code;
-        const exists = code !== "42P01" && error?.message?.indexOf("does not exist") === -1;
-        return { name, exists };
-      });
-
-      const checkedTables = await Promise.all(checkPromises);
+      const checkedTables = await Promise.all(
+        tablesToCheck.map(async (t) => {
+          if (mode === "fallback") {
+            // In local-fallback mode, tables are mocked virtually and always succeed
+            return { name: t.name, exists: true };
+          }
+          try {
+            await t.check();
+            return { name: t.name, exists: true };
+          } catch (e) {
+            console.error(`Table check failed for ${t.name}:`, e);
+            return { name: t.name, exists: false };
+          }
+        })
+      );
       setTables(checkedTables);
 
     } catch (err) {
@@ -170,9 +209,30 @@ export default function AdminOverview() {
         {/* Connection Diagnostics */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="h-5 w-5 text-primary" />
-              Supabase Tables Status
+            <CardTitle className="flex items-center justify-between gap-2">
+              <span className="flex items-center gap-2">
+                <Settings className="h-5 w-5 text-primary" />
+                Database Diagnostics
+              </span>
+              {!loading && (
+                <>
+                  {dbMode === "fallback" && (
+                    <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/20">
+                      Local Fallback Mode
+                    </Badge>
+                  )}
+                  {dbMode === "supabase" && (
+                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
+                      Supabase Connected
+                    </Badge>
+                  )}
+                  {dbMode === "offline" && (
+                    <Badge variant="destructive">
+                      API Server Offline
+                    </Badge>
+                  )}
+                </>
+              )}
             </CardTitle>
             <CardDescription>
               We run real-time checks on the status of your tables to make sure they are active.
@@ -185,10 +245,24 @@ export default function AdminOverview() {
                   <Skeleton key={i} className="h-6 w-full" />
                 ))}
               </div>
+            ) : dbMode === "offline" ? (
+              <div className="flex flex-col gap-3 p-4 rounded-xl border border-destructive/20 bg-destructive/5 text-sm">
+                <p className="font-semibold text-destructive flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 shrink-0" />
+                  Connection to API Server failed.
+                </p>
+                <p className="text-muted-foreground text-xs leading-relaxed">
+                  Make sure your backend API server is deployed and running, and that the
+                  <code className="px-1.5 py-0.5 rounded bg-muted font-mono font-bold text-foreground mx-1">
+                    NEXT_PUBLIC_API_URL
+                  </code>
+                  environment variable is correctly set in your project settings.
+                </p>
+              </div>
             ) : tables.length === 0 ? (
               <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
                 <AlertTriangle className="h-4 w-4 shrink-0" />
-                Connection to Supabase failed. Please verify your environment variables.
+                Could not fetch database status from the backend.
               </div>
             ) : (
               <div className="space-y-4">
@@ -212,13 +286,13 @@ export default function AdminOverview() {
                   ))}
                 </div>
 
-                {!allTablesOk && (
+                {!allTablesOk && dbMode === "supabase" && (
                   <div className="mt-4 p-4 rounded-xl border border-destructive/20 bg-destructive/5 text-sm space-y-2">
                     <p className="font-semibold text-destructive flex items-center gap-2">
                       <AlertTriangle className="h-4 w-4" /> Database Migration Required
                     </p>
                     <p className="text-muted-foreground text-xs leading-relaxed">
-                      One or more schema tables are missing. Copy the SQL script located in the
+                      One or more schema tables are missing from Supabase. Copy the SQL script located in the
                       <code className="px-1.5 py-0.5 rounded bg-muted font-mono font-bold text-foreground mx-1">
                         supabase/schema.sql
                       </code>
@@ -266,9 +340,11 @@ export default function AdminOverview() {
                   </Badge>
                 </div>
                 <div className="pt-2">
-                  <Button variant="outline" className="w-full rounded-xl" render={<Link href="/admin/settings" />}>
-                    Edit Settings Hub
-                  </Button>
+                  <Link href="/admin/settings" passHref legacyBehavior>
+                    <Button variant="outline" className="w-full rounded-xl">
+                      Edit Settings Hub
+                    </Button>
+                  </Link>
                 </div>
               </div>
             ) : (

@@ -53,6 +53,8 @@ app.use("/api/certificates", certificatesRouter);
 app.use("/api/blog", blogRouter);
 app.use("/api/messages", messagesRouter);
 
+import { isPlaceholderConfig } from "./supabase";
+
 // Root welcome message
 app.get("/", (req, res) => {
   res.json({
@@ -64,7 +66,11 @@ app.get("/", (req, res) => {
 
 // Health Check
 app.get("/health", (req, res) => {
-  res.json({ status: "healthy", timestamp: new Date().toISOString() });
+  res.json({
+    status: "healthy",
+    db_mode: isPlaceholderConfig() ? "fallback" : "supabase",
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Error handling middleware
