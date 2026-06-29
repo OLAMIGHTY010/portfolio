@@ -53,6 +53,15 @@ app.use("/api/certificates", certificatesRouter);
 app.use("/api/blog", blogRouter);
 app.use("/api/messages", messagesRouter);
 
+// Root welcome message
+app.get("/", (req, res) => {
+  res.json({
+    message: "Portfolio API Backend is running.",
+    documentation: "Use /api/... endpoints to query data",
+    health: "/health"
+  });
+});
+
 // Health Check
 app.get("/health", (req, res) => {
   res.json({ status: "healthy", timestamp: new Date().toISOString() });
