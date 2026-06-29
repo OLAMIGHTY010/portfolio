@@ -1,7 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isPlaceholderConfig } from "../utils";
 
 export async function updateSession(request: NextRequest) {
+  if (isPlaceholderConfig()) {
+    return NextResponse.next();
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });

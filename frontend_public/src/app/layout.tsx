@@ -20,6 +20,8 @@ const inter = Inter({
 
 import { getSiteSettings } from "@/lib/actions/settings";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
   
