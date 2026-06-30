@@ -73,13 +73,15 @@ export const STATS: StatItem[] = [
 // ============================================================
 // ABOUT / TIMELINE
 // ============================================================
-export const ABOUT_STORY = `I am a Service Monitoring Officer with experience in real-time system monitoring, incident reporting, and IT service management for banking operations. I ensure system reliability by rapidly detecting and resolving issues, documenting resolutions for continuous improvement, and improving operational workflows through automation. 
+export const ABOUT_STORY = `My journey into tech began in 2023 through the 3MTT program. I initially explored cybersecurity, but due to severe personal challenges, I had to temporarily step back. However, my drive to succeed in tech never faded.
 
-I build integrations and automations using Make (make.com), Zapier, and n8n, leveraging webhooks and API connectors to reduce manual tasks and speed up incident handling. 
+Shortly after, I joined Sterling Bank as a Service Monitoring Officer. My early days involved monitoring transactions and manually recording data in Excel. I quickly realized I wanted to do more—I wanted to analyze that data to find insights and automate those repetitive manual processes. This desire to transition into Business Intelligence brought me back to 3MTT, where I pivoted my focus to Data Analysis.
 
-I am actively expanding my expertise in Data Analysis (SQL, Power BI, Advanced Excel), and AI (Python) so I can contribute to secure, data-driven, and efficient IT environments.
+Balancing a demanding job meant I couldn't attend physical classes, but I persisted through online assessments. I subsequently expanded my expertise and earned Data Analysis certifications from DeepTech, DataCamp, and the LSETF/GIZ training program. Recognizing the incredible power of automation, I also completed a specialized course with Lobby-Ai.
 
-Beyond my day-to-day operations, I am passionate about data-driven decision-making, and I continuously seek innovative solutions to improve banking processes and service delivery.`;
+My continuous learning has paid off. In 2026, I gave back to the community as a Mentor for the Lobby-Ai automation program. Furthermore, since October 2025, I have been deployed through the NJFP to the Learn2Earn Tech Fellowship, where I am expanding my software engineering capabilities by learning Go and modern web development (HTML/CSS).
+
+I transform business problems into scalable digital solutions because I have lived through the pain of manual processes, and I know firsthand the immense value of automation and data-driven insights.`;
 
 export const TIMELINE: TimelineItem[] = [
   {
@@ -90,32 +92,39 @@ export const TIMELINE: TimelineItem[] = [
       "Graduated with a strong foundation in IT operations, programming, databases, and systems thinking.",
   },
   {
-    year: "2019",
-    title: "Safety Officer",
-    institution: "Mydas Hotel and Suite",
-    description:
-      "Ensured smooth day-to-day operations by overseeing facility maintenance, security, and emergency response protocols.",
-  },
-  {
-    year: "2022",
-    title: "Administrative Assistant",
-    institution: "Sampou Community Grammar School",
-    description:
-      "Managed logistics, coordinated educational activities, and maintained facilities to support student learning.",
-  },
-  {
     year: "2023",
-    title: "Customer Service Officer & Admin Assistant",
-    institution: "Polaris Bank & The Leadership Academy",
+    title: "Introduction to Tech",
+    institution: "3MTT Program",
     description:
-      "Delivered exceptional customer experiences, resolved complaints, and implemented activity-based learning programs.",
+      "Started my tech journey exploring cybersecurity before pivoting to Data Analysis to solve real-world automation challenges.",
   },
   {
     year: "2024",
     title: "Service Monitoring Officer",
     institution: "Sterling Bank",
     description:
-      "Responsible for real-time transaction monitoring, incident resolution, and process automation.",
+      "Transitioned from manual Excel data entry to automated BI reporting and real-time transaction monitoring.",
+  },
+  {
+    year: "2024-2025",
+    title: "Certifications in Data & Automation",
+    institution: "DeepTech, DataCamp, LSETF/GIZ, Lobby-Ai",
+    description:
+      "Earned multiple certifications to deepen my expertise in Data Analysis and Process Automation.",
+  },
+  {
+    year: "2025 (Oct)",
+    title: "Learn2Earn Tech Fellowship",
+    institution: "NJFP Deployment",
+    description:
+      "Intensive software engineering program. Currently expanding my skillset by learning Go (Golang) and modern web development (HTML/CSS).",
+  },
+  {
+    year: "2026",
+    title: "Automation Mentor",
+    institution: "Lobby-Ai",
+    description:
+      "Gave back to the community by mentoring students in process automation after successfully graduating from the program.",
   },
 ];
 
@@ -124,12 +133,40 @@ export const TIMELINE: TimelineItem[] = [
 // ============================================================
 export const EXPERIENCES: ExperienceItem[] = [
   {
+    role: "Automation Mentor",
+    company: "Lobby-Ai",
+    period: "2026",
+    location: "Remote",
+    description:
+      "Gave back to the community by mentoring students in process automation after successfully completing the Lobby-Ai automation program.",
+    responsibilities: [
+      "Mentored students in process automation and data analysis.",
+      "Provided guidance on real-world automation challenges and solutions.",
+      "Facilitated learning sessions and reviewed student projects."
+    ],
+    technologies: ["Automation", "Mentorship", "Process Improvement"],
+  },
+  {
+    role: "Tech Fellow (NJFP Deployed)",
+    company: "Learn2Earn Fellowship",
+    period: "October 2025 — Present",
+    location: "Nigeria",
+    description:
+      "Intensive software engineering program focused on practical tech skills, business analysis, and professional development.",
+    responsibilities: [
+      "Learning and applying Go (Golang) and modern web development (HTML/CSS).",
+      "Participating in intensive practical tech skill building and business analysis training.",
+      "Engaging in professional development activities."
+    ],
+    technologies: ["Go (Golang)", "HTML/CSS", "Software Engineering", "Business Analysis"],
+  },
+  {
     role: "Monitoring Officer / Associate",
     company: "Sterling Financial Holdings Company",
     period: "May 2024 — Present",
     location: "Lagos, Nigeria",
     description:
-      "Expertise in real-time system monitoring and incident management. Skilled in identifying, analyzing, and resolving service disruptions to ensure seamless operations and maintain high service availability.",
+      "Transitioned from manual Excel data entry to automated BI reporting and real-time transaction monitoring. Expertise in identifying, analyzing, and resolving service disruptions.",
     responsibilities: [
       "Track and analyze transaction performance using NIBSS Dashboard and other banking systems, ensuring prompt resolution of errors.",
       "Utilize SQL, Power BI, and Excel to generate insights, identify trends, and drive data-backed decisions.",
