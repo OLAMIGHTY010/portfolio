@@ -13,9 +13,11 @@ export function ProjectCard({ project }: { project: Project }) {
       whileHover={{ y: -4 }}
       transition={{ duration: 0.2 }}
     >
-      <Link href={`/projects/${project.slug}`} className="block group">
-        <div className="rounded-2xl border border-border bg-card overflow-hidden transition-shadow duration-300 hover:shadow-lg hover:shadow-primary/5">
-          {/* Image area */}
+      <div className="block group relative">
+        <Link href={`/projects/${project.slug}`} className="absolute inset-0 z-0" aria-label={`View details for ${project.title}`} />
+        <div className="rounded-2xl border border-border bg-card overflow-hidden transition-shadow duration-300 hover:shadow-lg hover:shadow-primary/5 relative pointer-events-none">
+          <div className="pointer-events-auto">
+            {/* Image area */}
           <div className="relative aspect-video bg-gradient-to-br from-primary/10 to-accent/10 overflow-hidden">
             {project.image_url ? (
               <img
@@ -67,22 +69,23 @@ export function ProjectCard({ project }: { project: Project }) {
 
             {/* Links */}
             {(project.github_url || project.live_url) && (
-              <div className="flex items-center gap-3 mt-4 pt-4 border-t border-border">
+              <div className="flex items-center gap-3 mt-4 pt-4 border-t border-border relative z-10">
                 {project.github_url && (
-                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                  <a href={project.github_url} target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
                     <GithubIcon className="h-3 w-3" /> Source
-                  </span>
+                  </a>
                 )}
                 {project.live_url && (
-                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                  <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
                     <ArrowUpRight className="h-3 w-3" /> Live
-                  </span>
+                  </a>
                 )}
               </div>
             )}
           </div>
+          </div>
         </div>
-      </Link>
+      </div>
     </motion.div>
   );
 }
