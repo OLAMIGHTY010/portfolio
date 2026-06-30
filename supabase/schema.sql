@@ -591,7 +591,7 @@ create table if not exists public.site_settings (
   site_title text not null default 'Olatunbosun Olalekan — Business Analyst | Data Analyst | Product Builder',
   site_description text not null default 'I transform business problems into scalable digital solutions using data, technology, and product thinking.',
   site_url text not null default 'https://olatunbosun.dev',
-  email text not null default 'olatunbosun.olalekan@gmail.com',
+  email text not null default 'Nanicomlekan111@gmail.com',
   linkedin_url text not null default 'https://linkedin.com/in/olatunbosun-olalekan',
   github_url text not null default 'https://github.com/olatunbosun',
   resume_url text not null default '/resume.pdf',

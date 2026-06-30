@@ -19,7 +19,7 @@ export const SITE_CONFIG = {
   links: {
     linkedin: "https://linkedin.com/in/olatunbosun-olalekan",
     github: "https://github.com/olatunbosun",
-    email: "olatunbosun.olalekan@gmail.com",
+    email: "Nanicomlekan111@gmail.com",
   },
 };
 
