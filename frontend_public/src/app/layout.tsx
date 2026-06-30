@@ -67,6 +67,10 @@ export default async function RootLayout({
         <ThemeProvider>
           <TooltipProvider>
             <div className="relative min-h-screen flex flex-col">
+              {/* Professional Subtle Background Elements */}
+              <div className="fixed inset-0 z-[-2] mesh-gradient opacity-60 dark:opacity-100" />
+              <div className="fixed inset-0 z-[-1] grid-pattern" />
+              
               <Navbar siteName={settings.site_name} />
               <main className="flex-1">{children}</main>
               <Footer settings={settings} />
