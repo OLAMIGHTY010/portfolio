@@ -53,19 +53,18 @@ export const HERO = {
   greeting: "Hi, I'm",
   name: "OLATUNBOSUN OLALEKAN",
   roles: [
-    "Business Analyst",
+    "Service Monitoring Officer",
     "Data Analyst",
-    "Business Intelligence Analyst",
     "Product Builder",
   ],
   summary:
-    "I transform business problems into scalable digital solutions using data, technology, and product thinking.",
+    "Technology-Driven Service Monitoring Officer | Data Analytics | AI & Innovation",
   ctaPrimary: "View My Work",
   ctaSecondary: "Download Resume",
 };
 
 export const STATS: StatItem[] = [
-  { label: "Years of Experience", value: 5, suffix: "+" },
+  { label: "Years of Experience", value: 9, suffix: "+" },
   { label: "Projects Completed", value: 12, suffix: "+" },
   { label: "Technologies", value: 15, suffix: "+" },
   { label: "Certifications", value: 8, suffix: "+" },
@@ -74,51 +73,49 @@ export const STATS: StatItem[] = [
 // ============================================================
 // ABOUT / TIMELINE
 // ============================================================
-export const ABOUT_STORY = `I started my career in banking operations, where I learned the art of precision, attention to detail, and high-stakes problem solving. Every day, I monitored thousands of transactions in real-time, investigated incidents, and communicated with stakeholders across multiple departments.
+export const ABOUT_STORY = `I am a Service Monitoring Officer with experience in real-time system monitoring, incident reporting, and IT service management for banking operations. I ensure system reliability by rapidly detecting and resolving issues, documenting resolutions for continuous improvement, and improving operational workflows through automation. 
 
-But I wanted to do more than observe — I wanted to build. That drive led me to learn SQL and Power BI, which transformed my approach to operations. Instead of reacting to problems, I started predicting them. Instead of manual reports, I built automated dashboards that leadership relied on daily.
+I build integrations and automations using Make (make.com), Zapier, and n8n, leveraging webhooks and API connectors to reduce manual tasks and speed up incident handling. 
 
-Then I discovered programming. Python for automation. Go for performance. Next.js for the web. Each tool expanded what I could build and the impact I could have.
+I am actively expanding my expertise in Data Analysis (SQL, Power BI, Advanced Excel), and AI (Python) so I can contribute to secure, data-driven, and efficient IT environments.
 
-Today, I'm building **FlowMart** — an inventory and sales management platform for small businesses in Nigeria. It combines everything I've learned: understanding real business problems, analyzing data to validate solutions, and engineering products that people actually use.
-
-I believe the best technologists are those who understand the business deeply enough to know what to build, and have the technical skill to build it well. That intersection — where business meets technology — is where I live.`;
+Beyond my day-to-day operations, I am passionate about data-driven decision-making, and I continuously seek innovative solutions to improve banking processes and service delivery.`;
 
 export const TIMELINE: TimelineItem[] = [
   {
-    year: "2012",
-    title: "Primary Education",
-    institution: "Complete Child Academy",
+    year: "2019",
+    title: "BTech & HND in Computer Engineering Technology",
+    institution: "Rufus Giwa Polytechnic",
     description:
-      "Foundation years where curiosity and problem-solving skills were first nurtured.",
-  },
-  {
-    year: "2015",
-    title: "Secondary Education",
-    institution: "Owo High School",
-    description:
-      "Developed strong analytical thinking and a passion for mathematics and science.",
+      "Graduated with a strong foundation in IT operations, programming, databases, and systems thinking.",
   },
   {
     year: "2019",
-    title: "Higher National Diploma",
-    institution: "Rufus Giwa Polytechnic",
+    title: "Safety Officer",
+    institution: "Mydas Hotel and Suite",
     description:
-      "Studied Computer Science, building a solid foundation in programming, databases, and systems thinking.",
+      "Ensured smooth day-to-day operations by overseeing facility maintenance, security, and emergency response protocols.",
   },
   {
     year: "2022",
-    title: "Tech Fellowship",
-    institution: "Learn2Earn Fellowship",
+    title: "Administrative Assistant",
+    institution: "Sampou Community Grammar School",
     description:
-      "Intensive program focused on practical tech skills, business analysis, and professional development.",
+      "Managed logistics, coordinated educational activities, and maintained facilities to support student learning.",
   },
   {
     year: "2023",
-    title: "Professional Deployment",
-    institution: "NJFP — Marina, Lagos",
+    title: "Customer Service Officer & Admin Assistant",
+    institution: "Polaris Bank & The Leadership Academy",
     description:
-      "Deployed as a Service Monitoring Officer in the banking sector, handling real-time transaction monitoring and incident management.",
+      "Delivered exceptional customer experiences, resolved complaints, and implemented activity-based learning programs.",
+  },
+  {
+    year: "2024",
+    title: "Service Monitoring Officer",
+    institution: "Sterling Bank",
+    description:
+      "Responsible for real-time transaction monitoring, incident resolution, and process automation.",
   },
 ];
 
@@ -127,31 +124,102 @@ export const TIMELINE: TimelineItem[] = [
 // ============================================================
 export const EXPERIENCES: ExperienceItem[] = [
   {
-    role: "Service Monitoring Officer",
-    company: "Banking Operations — Marina, Lagos",
-    period: "2023 — Present",
+    role: "Monitoring Officer / Associate",
+    company: "Sterling Financial Holdings Company",
+    period: "May 2024 — Present",
     location: "Lagos, Nigeria",
     description:
-      "Responsible for real-time monitoring of banking transactions, incident management, root cause analysis, and ensuring service availability across all channels.",
+      "Expertise in real-time system monitoring and incident management. Skilled in identifying, analyzing, and resolving service disruptions to ensure seamless operations and maintain high service availability.",
     responsibilities: [
-      "Monitor real-time transaction flows across all banking channels (Mobile, USSD, Web, ATM, POS) to ensure service availability and performance",
-      "Detect, escalate, and manage incidents using structured escalation protocols, reducing mean time to resolution (MTTR)",
-      "Conduct root cause analysis (RCA) for service disruptions and document findings for post-incident reviews",
-      "Communicate with cross-functional stakeholders including engineering, operations, and management during critical incidents",
-      "Generate daily, weekly, and monthly service availability and performance reports for senior management",
-      "Maintain and improve monitoring dashboards using SQL queries and Power BI visualizations",
-      "Implement proactive monitoring alerts and threshold configurations to prevent incidents before they impact customers",
-      "Collaborate with the engineering team on system reliability improvements based on incident trends and pattern analysis",
+      "Track and analyze transaction performance using NIBSS Dashboard and other banking systems, ensuring prompt resolution of errors.",
+      "Utilize SQL, Power BI, and Excel to generate insights, identify trends, and drive data-backed decisions.",
+      "Apply cybersecurity best practices to monitor system vulnerabilities and ensure compliance with industry regulations.",
+      "Develop a Python-based card transaction monitoring system with automated reporting and advanced logging features.",
+      "Maintain accurate shift schedules using a structured SQL database system, improving team efficiency.",
+      "Contributed to the Sterling-to-Sterling intra-bank transaction recovery strategy, leading to improved processing speed.",
+      "Developed email reporting automation, reducing manual effort and ensuring timely updates on system performance."
     ],
-    technologies: [
-      "SQL",
-      "Power BI",
-      "Python",
-      "Excel",
-      "Jira",
-      "Grafana",
-      "Transaction Monitoring Systems",
+    technologies: ["SQL", "Power BI", "Excel", "Python", "NIBSS Dashboard", "Cybersecurity"],
+  },
+  {
+    role: "Team Lead – Community Safety Alert App Project",
+    company: "3MTT Nigeria",
+    period: "March 2025 — September 2025",
+    location: "Lagos, Nigeria",
+    description:
+      "Led the development of the Community Safety Alert App, aimed at enhancing public safety through real-time alerts and community engagement.",
+    responsibilities: [
+      "Coordinated a team of developers, analysts, and designers to ensure smooth execution, from ideation to implementation.",
+      "Managed project timelines, task assignments, and stakeholder communication.",
+      "Leveraged cybersecurity principles to secure user data and prevent threats."
     ],
+    technologies: ["Project Management", "Cybersecurity", "Team Leadership"],
+  },
+  {
+    role: "Customer Service Officer",
+    company: "Polaris Bank Ltd.",
+    period: "January 2022 — May 2023",
+    location: "Nigeria",
+    description:
+      "Delivered exceptional customer experiences, resolved complaints promptly, and ensured customer satisfaction.",
+    responsibilities: [
+      "Managed customer inquiries and resolved complaints promptly, ensuring customer satisfaction.",
+      "Handled various communication channels, including phone, email, and in-person interactions, to provide efficient support.",
+      "Identified customer pain points, offered tailored solutions, and contributed to process improvements for enhanced service delivery."
+    ],
+    technologies: ["Customer Service", "Process Improvement", "Communication"],
+  },
+  {
+    role: "Administrative Assistant",
+    company: "The Leadership Academy",
+    period: "October 2022 — February 2023",
+    location: "Nigeria",
+    description:
+      "Designed and implemented activity-based learning programs that significantly increased student engagement.",
+    responsibilities: [
+      "Led the introduction of a behavior management program, reducing incidents of unacceptable behavior by 75%.",
+      "Designed and implemented activity-based learning programs."
+    ],
+    technologies: ["Administration", "Program Management"],
+  },
+  {
+    role: "Administrative Assistant",
+    company: "Sampou Community Grammar School",
+    period: "April 2021 — April 2022",
+    location: "Nigeria",
+    description:
+      "Managed school logistics, coordinated educational activities, and maintained facilities to support student learning.",
+    responsibilities: [
+      "Managed school logistics and coordinated educational activities.",
+      "Set educational standards, developed instructional methods, and ensured smooth program operations."
+    ],
+    technologies: ["Administration", "Logistics Management"],
+  },
+  {
+    role: "Safety Officer",
+    company: "Mydas Hotel and Suite",
+    period: "December 2016 — November 2019",
+    location: "Nigeria",
+    description:
+      "Ensured smooth day-to-day operations by overseeing facility maintenance, security, and emergency response protocols.",
+    responsibilities: [
+      "Overseen facility maintenance, security, and emergency response protocols.",
+      "Developed and managed relationships with vendors and workmen, ensuring the hotel met high safety and usability standards."
+    ],
+    technologies: ["Safety Management", "Operations", "Vendor Management"],
+  },
+  {
+    role: "Information Technology Support Officer",
+    company: "Rufus Giwa Polytechnic ICT Centre",
+    period: "January 2015 — April 2016",
+    location: "Nigeria",
+    description:
+      "Provided first-level support for hardware, software, and network issues, ensuring minimal system downtime.",
+    responsibilities: [
+      "Provided first-level support for hardware, software, and network issues.",
+      "Conducted routine database backup and restoration and assisted in network and system troubleshooting."
+    ],
+    technologies: ["IT Support", "Hardware", "Networking", "Database Management"],
   },
 ];
 
@@ -160,18 +228,18 @@ export const EXPERIENCES: ExperienceItem[] = [
 // ============================================================
 export const SKILL_CATEGORIES: SkillCategory[] = [
   {
-    title: "Business Analysis",
+    title: "Monitoring & Operations",
     description:
-      "Bridging the gap between business needs and technical solutions",
+      "Ensuring system reliability and rapid incident resolution",
     skills: [
-      { name: "Requirements Gathering" },
-      { name: "Stakeholder Management" },
-      { name: "Process Mapping (BPMN)" },
-      { name: "User Stories & Acceptance Criteria" },
-      { name: "Business Case Development" },
-      { name: "Gap Analysis" },
-      { name: "Agile/Scrum Methodology" },
-      { name: "Data-Driven Decision Making" },
+      { name: "Real-Time Incident Monitoring" },
+      { name: "NIBSS Dashboard" },
+      { name: "Transaction Tracking" },
+      { name: "IT Service Management" },
+      { name: "Cybersecurity Best Practices" },
+      { name: "Root Cause Analysis (RCA)" },
+      { name: "Shift & Team Coordination" },
+      { name: "Hardware & Network Support" },
     ],
   },
   {
@@ -180,26 +248,26 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     skills: [
       { name: "SQL (PostgreSQL, MySQL)" },
       { name: "Power BI" },
-      { name: "Python (Pandas, NumPy)" },
+      { name: "Advanced Excel" },
+      { name: "Data Management" },
       { name: "Data Modeling" },
-      { name: "ETL Pipelines" },
-      { name: "Statistical Analysis" },
       { name: "Data Visualization" },
-      { name: "Excel Advanced Analytics" },
+      { name: "Trend Identification" },
+      { name: "Performance Tracking" },
     ],
   },
   {
-    title: "Development",
-    description: "Building products from concept to deployment",
+    title: "Automation & Integration",
+    description: "Reducing manual effort through process automation",
     skills: [
-      { name: "TypeScript / JavaScript" },
-      { name: "Go (Golang)" },
-      { name: "Python" },
-      { name: "Next.js / React" },
-      { name: "Node.js" },
-      { name: "PostgreSQL" },
-      { name: "REST APIs" },
-      { name: "Git & GitHub" },
+      { name: "Python Scripting" },
+      { name: "Make (make.com)" },
+      { name: "Zapier" },
+      { name: "n8n" },
+      { name: "API Connectors" },
+      { name: "Webhooks" },
+      { name: "Email Reporting Automation" },
+      { name: "Process Optimization" },
     ],
   },
   {
@@ -207,11 +275,11 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
     description: "Professional tools that power my daily workflow",
     skills: [
       { name: "Jira" },
-      { name: "Figma" },
+      { name: "GitHub" },
       { name: "VS Code" },
       { name: "Postman" },
-      { name: "Supabase" },
-      { name: "Vercel" },
+      { name: "Grafana" },
+      { name: "Transaction Monitoring Systems" },
       { name: "Power BI Desktop" },
       { name: "Confluence" },
     ],
