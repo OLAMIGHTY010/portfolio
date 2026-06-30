@@ -17,9 +17,9 @@ export const SITE_CONFIG = {
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://olatunbosun.dev",
   ogImage: "/images/og-default.png",
   links: {
-    linkedin: "https://linkedin.com/in/olatunbosun-olalekan",
-    github: "https://github.com/olatunbosun",
-    email: "olatunbosun.olalekan@gmail.com",
+    linkedin: "https://www.linkedin.com/in/olatunbosun-olalekan",
+    github: "https://github.com/OLAMIGHTY010",
+    email: "Nanicomlekan111@gmail.com",
   },
 };
 
