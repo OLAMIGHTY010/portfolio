@@ -185,13 +185,23 @@ export default function SettingsHub() {
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label>SEO Title Template</Label>
-                <Input
-                  value={settings.site_title}
-                  onChange={(e) => updateField("site_title", e.target.value)}
-                  placeholder="Appears on browser tabs"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>SEO Title Template</Label>
+                  <Input
+                    value={settings.site_title}
+                    onChange={(e) => updateField("site_title", e.target.value)}
+                    placeholder="Appears on browser tabs"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Profile Picture / Avatar URL</Label>
+                  <Input
+                    value={settings.avatar_url || ""}
+                    onChange={(e) => updateField("avatar_url", e.target.value)}
+                    placeholder="https://.../image.png"
+                  />
+                </div>
               </div>
               <div className="space-y-2">
                 <Label>SEO Site Description</Label>

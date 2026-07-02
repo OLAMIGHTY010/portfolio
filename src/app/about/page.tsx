@@ -66,10 +66,18 @@ export default async function AboutPage() {
                 <div className="sticky top-28 space-y-6">
                   {/* Profile card */}
                   <div className="rounded-2xl border border-border bg-card p-6 text-center">
-                    <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mb-4">
-                      <span className="text-4xl font-bold text-primary/50">
-                        {settings.site_name.split(" ").map(n => n[0]).join("")}
-                      </span>
+                    <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mb-4 overflow-hidden">
+                      {settings.avatar_url ? (
+                        <img 
+                          src={settings.avatar_url} 
+                          alt={settings.site_name} 
+                          className="w-full h-full object-cover" 
+                        />
+                      ) : (
+                        <span className="text-4xl font-bold text-primary/50">
+                          {settings.site_name.split(" ").map((n: string) => n[0]).join("")}
+                        </span>
+                      )}
                     </div>
                     <h3 className="text-lg font-semibold text-foreground">
                       {settings.site_name}
