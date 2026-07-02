@@ -12,6 +12,7 @@ export interface SiteSettings {
   resume_url: string;
   is_open_to_opportunities: boolean;
   location_display: string;
+  avatar_url: string;
   
   hero_greeting: string;
   hero_name: string;
@@ -47,6 +48,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
   resume_url: "/resume.pdf",
   is_open_to_opportunities: true,
   location_display: "Lagos, Nigeria",
+  avatar_url: "",
   
   hero_greeting: HERO.greeting,
   hero_name: HERO.name,
