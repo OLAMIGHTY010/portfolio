@@ -116,6 +116,11 @@ export default function ExperienceSkillsManager() {
   }
 
   async function saveExp() {
+    if (!expForm.role || !expForm.company || !expForm.period || !expForm.description) {
+      alert("Please fill in the required fields: Role, Company, Period, and Short Description.");
+      return;
+    }
+    
     try {
       const payload = {
         role: expForm.role,
@@ -137,6 +142,7 @@ export default function ExperienceSkillsManager() {
       loadAllData();
     } catch (err) {
       console.error("Save experience failed:", err);
+      alert("Failed to save experience. Make sure all fields are correct.");
     }
   }
 
@@ -209,6 +215,11 @@ export default function ExperienceSkillsManager() {
   }
 
   async function saveSkill() {
+    if (!skillForm.title || !skillForm.description) {
+      alert("Please fill in both the Category Title and Brief Description.");
+      return;
+    }
+    
     try {
       const payload = {
         title: skillForm.title,
@@ -226,6 +237,7 @@ export default function ExperienceSkillsManager() {
       loadAllData();
     } catch (err) {
       console.error("Save skill category failed:", err);
+      alert("Failed to save skill category. Make sure all fields are correct.");
     }
   }
 
