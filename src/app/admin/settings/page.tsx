@@ -38,15 +38,20 @@ export default function SettingsHub() {
     loadSettings();
   }, []);
 
-  async function handleSave() {
+  async function saveSettings() {
     if (!settings) return;
     setSaving(true);
     try {
-      await updateSiteSettings(settings);
-      alert("Settings saved successfully!");
-    } catch (err) {
-      console.error("Failed to save settings:", err);
-      alert("An error occurred while saving settings.");
+      const result = await updateSiteSettings(settings);
+      if (result && result.error) {
+        console.error("Error from server:", result.error);
+        alert("Failed to save settings: " + result.error);
+      } else {
+        alert("Settings saved successfully!");
+      }
+    } catch (error: any) {
+      console.error("Error saving settings:", error);
+      alert("Failed to save settings: " + (error.message || "Unknown error"));
     } finally {
       setSaving(false);
     }
