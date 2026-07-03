@@ -31,12 +31,14 @@ export default function AdminProjects() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [form, setForm] = useState({
     title: "",
     slug: "",
     description: "",
     case_study: "",
+    image_url: "",
     tech_stack: "",
     github_url: "",
     live_url: "",
@@ -64,6 +66,40 @@ export default function AdminProjects() {
     }
   }
 
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+
+    setUploadingImage(true);
+    try {
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+      
+      const { data, error } = await supabase.storage
+        .from("images")
+        .upload(`projects/${fileName}`, file);
+
+      if (error) {
+        alert("Upload error: " + error.message);
+        throw error;
+      }
+      
+      const { data: publicUrlData } = supabase.storage
+        .from("images")
+        .getPublicUrl(`projects/${fileName}`);
+        
+      setForm({ ...form, image_url: publicUrlData.publicUrl });
+      alert("Image uploaded successfully!");
+    } catch (err) {
+      console.error("Error uploading image:", err);
+    } finally {
+      setUploadingImage(false);
+    }
+  }
+
   function openCreate() {
     setEditingProject(null);
     setForm({
@@ -71,6 +107,7 @@ export default function AdminProjects() {
       slug: "",
       description: "",
       case_study: "",
+      image_url: "",
       tech_stack: "",
       github_url: "",
       live_url: "",
@@ -87,6 +124,7 @@ export default function AdminProjects() {
       slug: project.slug,
       description: project.description,
       case_study: project.case_study || "",
+      image_url: project.image_url || "",
       tech_stack: project.tech_stack.join(", "),
       github_url: project.github_url || "",
       live_url: project.live_url || "",
@@ -107,6 +145,7 @@ export default function AdminProjects() {
         slug: form.slug || slugify(form.title),
         description: form.description,
         case_study: form.case_study || null,
+        image_url: form.image_url || null,
         tech_stack: form.tech_stack.split(",").map((s) => s.trim()).filter(Boolean),
         github_url: form.github_url || null,
         live_url: form.live_url || null,
@@ -194,6 +233,28 @@ export default function AdminProjects() {
                   placeholder="## The Problem&#10;&#10;Describe the problem..."
                   className="min-h-[200px] font-mono text-sm"
                 />
+              </div>
+              <div className="space-y-2">
+                <Label>Project Image</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={form.image_url}
+                    onChange={(e) => setForm({ ...form, image_url: e.target.value })}
+                    placeholder="https://... or upload image"
+                  />
+                  <div className="relative">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploadingImage}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <Button type="button" variant="secondary" disabled={uploadingImage}>
+                      {uploadingImage ? <Loader2 className="h-4 w-4 animate-spin" /> : "Upload"}
+                    </Button>
+                  </div>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label>Tech Stack (comma-separated)</Label>
