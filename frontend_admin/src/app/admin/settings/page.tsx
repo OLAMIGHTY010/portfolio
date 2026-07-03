@@ -15,6 +15,8 @@ export default function SettingsHub() {
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingResume, setUploadingResume] = useState(false);
   const [activeTab, setActiveTab] = useState<"general" | "socials" | "hero" | "flowmart">("general");
 
   // Temporary inputs
@@ -119,6 +121,76 @@ export default function SettingsHub() {
     updateField("flowmart_user_journey", settings.flowmart_user_journey.filter((_, i) => i !== index));
   };
 
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    
+    setUploadingImage(true);
+    try {
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      
+      const fileExt = file.name.split('.').pop();
+      const fileName = `avatar-${Math.random()}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
+
+      const { error: uploadError, data } = await supabase.storage
+        .from('images')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('images')
+        .getPublicUrl(filePath);
+
+      updateField("avatar_url", publicUrl);
+      alert("Image uploaded successfully!");
+    } catch (error: any) {
+      console.error('Error uploading image:', error);
+      alert("Error uploading image: " + (error.message || "Unknown error"));
+    } finally {
+      setUploadingImage(false);
+    }
+  }
+
+  async function handleDocumentUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    
+    setUploadingResume(true);
+    try {
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      
+      const fileExt = file.name.split('.').pop();
+      const fileName = `resume-${Math.random()}.${fileExt}`;
+      const filePath = `resumes/${fileName}`;
+
+      const { error: uploadError, data } = await supabase.storage
+        .from('documents')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('documents')
+        .getPublicUrl(filePath);
+
+      updateField("resume_url", publicUrl);
+      alert("Resume uploaded successfully!");
+    } catch (error: any) {
+      console.error('Error uploading resume:', error);
+      alert("Error uploading resume: " + (error.message || "Unknown error"));
+    } finally {
+      setUploadingResume(false);
+    }
+  }
+
   return (
     <div className="space-y-6 max-w-4xl">
       {/* Header */}
@@ -195,12 +267,27 @@ export default function SettingsHub() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Profile Picture / Avatar URL</Label>
-                  <Input
-                    value={settings.avatar_url || ""}
-                    onChange={(e) => updateField("avatar_url", e.target.value)}
-                    placeholder="https://.../image.png"
-                  />
+                  <Label>Profile Picture / Avatar</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={settings.avatar_url || ""}
+                      onChange={(e) => updateField("avatar_url", e.target.value)}
+                      placeholder="https://.../image.png"
+                      className="flex-1"
+                    />
+                    <div className="relative">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                        onChange={handleImageUpload}
+                        disabled={uploadingImage}
+                      />
+                      <Button type="button" variant="secondary" disabled={uploadingImage}>
+                        {uploadingImage ? <Loader2 className="h-4 w-4 animate-spin" /> : "Upload Image"}
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="space-y-2">
@@ -253,12 +340,27 @@ export default function SettingsHub() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Resume PDF URL</Label>
-                  <Input
-                    value={settings.resume_url}
-                    onChange={(e) => updateField("resume_url", e.target.value)}
-                    placeholder="/resume.pdf"
-                  />
+                  <Label>Resume/CV</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      value={settings.resume_url || ""}
+                      onChange={(e) => updateField("resume_url", e.target.value)}
+                      placeholder="https://.../resume.pdf"
+                      className="flex-1"
+                    />
+                    <div className="relative">
+                      <Input
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                        onChange={handleDocumentUpload}
+                        disabled={uploadingResume}
+                      />
+                      <Button type="button" variant="secondary" disabled={uploadingResume}>
+                        {uploadingResume ? <Loader2 className="h-4 w-4 animate-spin" /> : "Upload CV"}
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
