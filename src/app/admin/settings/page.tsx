@@ -38,7 +38,7 @@ export default function SettingsHub() {
     loadSettings();
   }, []);
 
-  async function saveSettings() {
+  async function handleSave() {
     if (!settings) return;
     setSaving(true);
     try {
