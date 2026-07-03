@@ -101,6 +101,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       email: data.email,
       linkedin_url: data.linkedin_url,
       github_url: data.github_url,
+      avatar_url: data.avatar_url,
       resume_url: data.resume_url,
       is_open_to_opportunities: data.is_open_to_opportunities,
       location_display: data.location_display,
