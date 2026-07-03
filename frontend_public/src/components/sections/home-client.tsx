@@ -89,8 +89,23 @@ export function HomeClient({ settings, stats, featuredProjects }: HomeClientProp
 
         <div className="container-custom relative z-10 pt-28 pb-20">
           <div className="max-w-4xl mx-auto text-center">
+            {/* Avatar */}
+            {settings.avatar_url && (
+              <FadeIn>
+                <div className="flex justify-center mb-6">
+                  <div className="relative h-24 w-24 sm:h-32 sm:w-32 rounded-full overflow-hidden border-4 border-background shadow-xl ring-2 ring-primary/20">
+                    <img 
+                      src={settings.avatar_url} 
+                      alt={settings.hero_name}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                </div>
+              </FadeIn>
+            )}
+
             {/* Greeting */}
-            <FadeIn>
+            <FadeIn delay={0.1}>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -102,14 +117,14 @@ export function HomeClient({ settings, stats, featuredProjects }: HomeClientProp
             </FadeIn>
 
             {/* Name */}
-            <FadeIn delay={0.1}>
+            <FadeIn delay={0.2}>
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
                 <span className="gradient-text">{settings.hero_name}</span>
               </h1>
             </FadeIn>
 
             {/* Roles */}
-            <FadeIn delay={0.2}>
+            <FadeIn delay={0.3}>
               <div className="flex flex-wrap justify-center gap-2 mb-6">
                 {settings.hero_roles.map((role) => (
                   <span
@@ -123,14 +138,14 @@ export function HomeClient({ settings, stats, featuredProjects }: HomeClientProp
             </FadeIn>
 
             {/* Summary */}
-            <FadeIn delay={0.3}>
+            <FadeIn delay={0.4}>
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
                 {settings.hero_summary}
               </p>
             </FadeIn>
 
             {/* CTAs */}
-            <FadeIn delay={0.4}>
+            <FadeIn delay={0.5}>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Button size="lg" className="rounded-full px-8 gap-2 text-base" render={<Link href="/projects" />}>
                   {settings.hero_cta_primary}
