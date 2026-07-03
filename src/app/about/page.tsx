@@ -6,7 +6,7 @@ import { Timeline } from "@/components/sections/timeline";
 import { getSiteSettings } from "@/lib/actions/settings";
 import { getTimeline } from "@/lib/actions/timeline";
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();

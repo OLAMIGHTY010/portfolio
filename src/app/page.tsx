@@ -4,7 +4,7 @@ import { getStats } from "@/lib/actions/stats";
 import { getFeaturedProjects } from "@/lib/actions/projects";
 
 // Ensure this page runs dynamically to pull fresh DB content
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function HomePage() {
   const [settings, stats, featuredProjects] = await Promise.all([

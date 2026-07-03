@@ -3,7 +3,7 @@ import { FadeIn, StaggerContainer, StaggerItem } from "@/components/sections/ani
 import { getSkillCategories } from "@/lib/actions/skills";
 import { Brain, BarChart3, Code2, Wrench } from "lucide-react";
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Skills",

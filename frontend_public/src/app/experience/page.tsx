@@ -4,7 +4,7 @@ import { FadeIn, StaggerContainer, StaggerItem } from "@/components/sections/ani
 import { getExperiences } from "@/lib/actions/experience";
 import { Briefcase, MapPin, Calendar, CheckCircle2 } from "lucide-react";
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Experience",
