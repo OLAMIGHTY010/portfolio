@@ -154,9 +154,11 @@ export default function AdminProjects() {
       };
 
       if (editingProject) {
-        await supabase.from("projects").update(payload).eq("id", editingProject.id);
+        const { error } = await supabase.from("projects").update(payload).eq("id", editingProject.id);
+        if (error) throw error;
       } else {
-        await supabase.from("projects").insert(payload);
+        const { error } = await supabase.from("projects").insert(payload);
+        if (error) throw error;
       }
 
       setDialogOpen(false);
