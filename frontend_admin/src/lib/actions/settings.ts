@@ -134,20 +134,24 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 }
 
 export async function updateSiteSettings(settings: Partial<SiteSettings>) {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("site_settings")
-    .update(settings)
-    .eq("id", "default")
-    .select()
-    .single();
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("site_settings")
+      .update(settings)
+      .eq("id", "default")
+      .select()
+      .single();
 
-  if (error) throw error;
+    if (error) return { success: false, error: error.message };
 
-  revalidatePath("/");
-  revalidatePath("/about");
-  revalidatePath("/flowmart");
-  revalidatePath("/contact");
-  revalidatePath("/admin/settings");
-  return data;
+    revalidatePath("/");
+    revalidatePath("/about");
+    revalidatePath("/flowmart");
+    revalidatePath("/contact");
+    revalidatePath("/admin/settings");
+    return { success: true, data };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Unknown error" };
+  }
 }
