@@ -1,3 +1,4 @@
+// Force cache invalidation
 "use client";
 
 import { useState } from "react";
