@@ -22,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Pencil, Trash2, Loader2, Github } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, RefreshCw } from "lucide-react";
 import type { Project } from "@/lib/types";
 import { slugify } from "@/lib/utils";
 import { MarkdownEditor } from "@/components/ui/md-editor";
@@ -214,14 +214,12 @@ export default function AdminProjects() {
         </div>
         <div className="flex items-center gap-3">
           <Button variant="outline" className="gap-2" onClick={handleSyncGithub} disabled={syncing}>
-            {syncing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Github className="h-4 w-4" />}
+            {syncing ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
             Sync with GitHub
           </Button>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2" onClick={openCreate}>
+            <DialogTrigger render={<Button className="gap-2" />} onClick={openCreate}>
                 <Plus className="h-4 w-4" /> Add Project
-              </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
               <DialogHeader>
@@ -336,6 +334,7 @@ export default function AdminProjects() {
             </div>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {/* Table */}
