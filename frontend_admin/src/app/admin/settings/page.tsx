@@ -74,12 +74,12 @@ export default function SettingsHub() {
   // Hero roles helper
   const addRole = () => {
     if (!newRole.trim()) return;
-    updateField("hero_roles", [...settings.hero_roles, newRole.trim()]);
+    updateField("hero_roles", [...(settings.hero_roles || []), newRole.trim()]);
     setNewRole("");
   };
 
   const removeRole = (index: number) => {
-    updateField("hero_roles", settings.hero_roles.filter((_, i) => i !== index));
+    updateField("hero_roles", (settings.hero_roles || []).filter((_, i) => i !== index));
   };
 
   // FlowMart painpoints helper
