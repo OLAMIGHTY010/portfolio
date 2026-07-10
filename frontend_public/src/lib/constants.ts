@@ -30,7 +30,6 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Experience", href: "/experience" },
-  { label: "FlowMart", href: "/flowmart" },
   { label: "Projects", href: "/projects" },
   { label: "Skills", href: "/skills" },
   { label: "Certifications", href: "/certifications" },
