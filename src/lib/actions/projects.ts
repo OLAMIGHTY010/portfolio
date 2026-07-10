@@ -139,7 +139,11 @@ export async function syncGithubRepos(username: string) {
         sort_order: 99,
       };
       
-      await supabase.from('projects').insert(newProject);
+      const { error } = await supabase.from('projects').insert(newProject);
+      if (error) {
+        console.error("Failed to insert project:", error);
+        continue;
+      }
       addedCount++;
     }
     
