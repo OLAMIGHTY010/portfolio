@@ -25,6 +25,7 @@ import {
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import type { Project } from "@/lib/types";
 import { slugify } from "@/lib/utils";
+import { MarkdownEditor } from "@/components/ui/md-editor";
 
 export default function AdminProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -229,11 +230,10 @@ export default function AdminProjects() {
               </div>
               <div className="space-y-2">
                 <Label>Case Study (Markdown)</Label>
-                <Textarea
+                <MarkdownEditor
                   value={form.case_study}
-                  onChange={(e) => setForm({ ...form, case_study: e.target.value })}
-                  placeholder="## The Problem&#10;&#10;Describe the problem..."
-                  className="min-h-[200px] font-mono text-sm"
+                  onChange={(val) => setForm({ ...form, case_study: val || "" })}
+                  height={400}
                 />
               </div>
               <div className="space-y-2">

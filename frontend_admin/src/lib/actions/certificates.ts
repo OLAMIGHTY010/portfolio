@@ -1,34 +1,62 @@
-import { apiFetch } from "../api-client";
-import type { CertificateInput, Certificate } from "@/lib/types";
+"use server";
 
-export async function getCertificates(): Promise<Certificate[]> {
-  try {
-    return await apiFetch<Certificate[]>("/certificates");
-  } catch (err) {
-    console.warn("Failed to fetch certificates from API:", err);
-    return [];
-  }
+import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
+import type { CertificateInput } from "@/lib/types";
+import { isPlaceholderConfig } from "@/lib/utils";
+
+export async function getCertificates() {
+  if (isPlaceholderConfig()) return [];
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("certificates")
+    .select("*")
+    .order("sort_order", { ascending: true });
+
+  if (error) throw error;
+  return data;
 }
 
-export async function createCertificate(certificate: CertificateInput): Promise<Certificate> {
-  return await apiFetch<Certificate>("/certificates", {
-    method: "POST",
-    body: JSON.stringify(certificate),
-  });
+export async function createCertificate(certificate: CertificateInput) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("certificates")
+    .insert(certificate)
+    .select()
+    .single();
+
+  if (error) throw error;
+  revalidatePath("/certifications");
+  revalidatePath("/admin/certificates");
+  return data;
 }
 
 export async function updateCertificate(
   id: string,
   certificate: Partial<CertificateInput>
-): Promise<Certificate> {
-  return await apiFetch<Certificate>(`/certificates/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(certificate),
-  });
+) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("certificates")
+    .update(certificate)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  revalidatePath("/certifications");
+  revalidatePath("/admin/certificates");
+  return data;
 }
 
-export async function deleteCertificate(id: string): Promise<void> {
-  await apiFetch<void>(`/certificates/${id}`, {
-    method: "DELETE",
-  });
+export async function deleteCertificate(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("certificates")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/certifications");
+  revalidatePath("/admin/certificates");
 }

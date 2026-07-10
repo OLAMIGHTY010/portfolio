@@ -25,6 +25,7 @@ import {
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import type { BlogPost } from "@/lib/types";
 import { slugify, formatDate, estimateReadingTime } from "@/lib/utils";
+import { MarkdownEditor } from "@/components/ui/md-editor";
 
 export default function AdminBlog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -165,11 +166,10 @@ export default function AdminBlog() {
               </div>
               <div className="space-y-2">
                 <Label>Content (Markdown)</Label>
-                <Textarea
+                <MarkdownEditor
                   value={form.content}
-                  onChange={(e) => setForm({ ...form, content: e.target.value })}
-                  placeholder="# Your Article Title&#10;&#10;Write your content in markdown..."
-                  className="min-h-[300px] font-mono text-sm"
+                  onChange={(val) => setForm({ ...form, content: val || "" })}
+                  height={500}
                 />
               </div>
               <div className="flex items-center gap-2">

@@ -1,49 +1,92 @@
-import { apiFetch } from "../api-client";
-import type { ProjectInput, Project } from "@/lib/types";
+"use server";
 
-export async function getProjects(publishedOnly = true): Promise<Project[]> {
-  try {
-    return await apiFetch<Project[]>(`/projects?publishedOnly=${publishedOnly}`);
-  } catch (err) {
-    console.warn("Failed to fetch projects from API:", err);
-    return [];
+import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
+import type { ProjectInput } from "@/lib/types";
+import { isPlaceholderConfig } from "@/lib/utils";
+
+export async function getProjects(publishedOnly = true) {
+  if (isPlaceholderConfig()) return [];
+  const supabase = await createClient();
+  let query = supabase
+    .from("projects")
+    .select("*")
+    .order("sort_order", { ascending: true });
+
+  if (publishedOnly) {
+    query = query.eq("published", true);
   }
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return data;
 }
 
-export async function getFeaturedProjects(): Promise<Project[]> {
-  try {
-    return await apiFetch<Project[]>("/projects?featured=true");
-  } catch (err) {
-    console.warn("Failed to fetch featured projects from API:", err);
-    return [];
-  }
+export async function getFeaturedProjects() {
+  if (isPlaceholderConfig()) return [];
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("published", true)
+    .eq("featured", true)
+    .order("sort_order", { ascending: true })
+    .limit(3);
+
+  if (error) throw error;
+  return data;
 }
 
-export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  try {
-    return await apiFetch<Project>(`/projects/slug/${slug}`);
-  } catch (err) {
-    console.warn(`Failed to fetch project by slug (${slug}) from API:`, err);
-    return null;
-  }
+export async function getProjectBySlug(slug: string) {
+  if (isPlaceholderConfig()) return null;
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error) throw error;
+  return data;
 }
 
-export async function createProject(project: ProjectInput): Promise<Project> {
-  return await apiFetch<Project>("/projects", {
-    method: "POST",
-    body: JSON.stringify(project),
-  });
+export async function createProject(project: ProjectInput) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("projects")
+    .insert(project)
+    .select()
+    .single();
+
+  if (error) throw error;
+  revalidatePath("/projects");
+  revalidatePath("/admin/projects");
+  revalidatePath("/");
+  return data;
 }
 
-export async function updateProject(id: string, project: Partial<ProjectInput>): Promise<Project> {
-  return await apiFetch<Project>(`/projects/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(project),
-  });
+export async function updateProject(id: string, project: Partial<ProjectInput>) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("projects")
+    .update(project)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  revalidatePath("/projects");
+  revalidatePath("/admin/projects");
+  revalidatePath("/");
+  return data;
 }
 
-export async function deleteProject(id: string): Promise<void> {
-  await apiFetch<void>(`/projects/${id}`, {
-    method: "DELETE",
-  });
+export async function deleteProject(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("projects").delete().eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/projects");
+  revalidatePath("/admin/projects");
+  revalidatePath("/");
 }

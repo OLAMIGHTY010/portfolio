@@ -72,9 +72,31 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const project = await getProject(slug);
   if (!project) return { title: "Project Not Found" };
+  
   return {
     title: project.title,
     description: project.description,
+    openGraph: {
+      title: project.title,
+      description: project.description,
+      type: "article",
+      ...(project.image_url && {
+        images: [
+          {
+            url: project.image_url,
+            width: 1200,
+            height: 630,
+            alt: project.title,
+          },
+        ],
+      }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description: project.description,
+      ...(project.image_url && { images: [project.image_url] }),
+    },
   };
 }
 

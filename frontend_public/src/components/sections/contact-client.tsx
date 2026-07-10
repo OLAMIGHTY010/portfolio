@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import type { SiteSettings } from "@/lib/actions/settings";
+import { sendContactEmail } from "@/lib/actions/email";
 
 interface ContactClientProps {
   settings: SiteSettings;
@@ -32,11 +33,17 @@ export function ContactClient({ settings }: ContactClientProps) {
     try {
       const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();
+      
+      // Save to database
       const { error } = await supabase
         .from("messages")
         .insert([formData]);
 
       if (error) throw error;
+
+      // Send email notification
+      await sendContactEmail(formData);
+
       setFormState("success");
       setFormData({ name: "", email: "", body: "" });
     } catch {

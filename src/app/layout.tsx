@@ -50,6 +50,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+import { Analytics } from "@vercel/analytics/react";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -71,6 +73,7 @@ export default async function RootLayout({
             </div>
           </TooltipProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );

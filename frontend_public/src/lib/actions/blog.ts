@@ -1,43 +1,77 @@
-import { apiFetch } from "../api-client";
-import type { BlogPostInput, BlogPost } from "@/lib/types";
+"use server";
 
-export async function getBlogPosts(publishedOnly = true): Promise<BlogPost[]> {
-  try {
-    return await apiFetch<BlogPost[]>(`/blog?publishedOnly=${publishedOnly}`);
-  } catch (err) {
-    console.warn("Failed to fetch blog posts from API:", err);
-    return [];
+import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
+import type { BlogPostInput } from "@/lib/types";
+import { isPlaceholderConfig } from "@/lib/utils";
+
+export async function getBlogPosts(publishedOnly = true) {
+  if (isPlaceholderConfig()) return [];
+  const supabase = await createClient();
+  let query = supabase
+    .from("blog_posts")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (publishedOnly) {
+    query = query.eq("published", true);
   }
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return data;
 }
 
-export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
-  try {
-    return await apiFetch<BlogPost>(`/blog/slug/${slug}`);
-  } catch (err) {
-    console.warn(`Failed to fetch blog post by slug (${slug}) from API:`, err);
-    return null;
-  }
+export async function getBlogPostBySlug(slug: string) {
+  if (isPlaceholderConfig()) return null;
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+
+  if (error) throw error;
+  return data;
 }
 
-export async function createBlogPost(post: BlogPostInput): Promise<BlogPost> {
-  return await apiFetch<BlogPost>("/blog", {
-    method: "POST",
-    body: JSON.stringify(post),
-  });
+export async function createBlogPost(post: BlogPostInput) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .insert(post)
+    .select()
+    .single();
+
+  if (error) throw error;
+  revalidatePath("/blog");
+  revalidatePath("/admin/blog");
+  return data;
 }
 
 export async function updateBlogPost(
   id: string,
   post: Partial<BlogPostInput>
-): Promise<BlogPost> {
-  return await apiFetch<BlogPost>(`/blog/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(post),
-  });
+) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .update(post)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  revalidatePath("/blog");
+  revalidatePath("/admin/blog");
+  return data;
 }
 
-export async function deleteBlogPost(id: string): Promise<void> {
-  await apiFetch<void>(`/blog/${id}`, {
-    method: "DELETE",
-  });
+export async function deleteBlogPost(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("blog_posts").delete().eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/blog");
+  revalidatePath("/admin/blog");
 }

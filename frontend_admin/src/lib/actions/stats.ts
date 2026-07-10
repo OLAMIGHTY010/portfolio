@@ -1,6 +1,10 @@
-import { apiFetch } from "../api-client";
+"use server";
+
+import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 import { STATS } from "@/lib/constants";
 import type { StatItem } from "@/lib/types";
+import { isPlaceholderConfig } from "@/lib/utils";
 
 export interface DBStat extends StatItem {
   id: string;
@@ -16,37 +20,72 @@ const DEFAULT_STATS: DBStat[] = STATS.map((stat, index) => ({
 }));
 
 export async function getStats(): Promise<DBStat[]> {
+  if (isPlaceholderConfig()) {
+    return DEFAULT_STATS;
+  }
   try {
-    return await apiFetch<DBStat[]>("/stats");
-  } catch (err) {
-    console.warn("Failed to fetch stats from API, using defaults:", err);
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("stats")
+      .select("*")
+      .order("sort_order", { ascending: true });
+
+    if (error || !data || data.length === 0) {
+      return DEFAULT_STATS;
+    }
+    return data;
+  } catch {
     return DEFAULT_STATS;
   }
 }
 
-export async function createStat(stat: Omit<DBStat, "id">): Promise<DBStat> {
-  return await apiFetch<DBStat>("/stats", {
-    method: "POST",
-    body: JSON.stringify(stat),
-  });
+export async function createStat(stat: Omit<DBStat, "id">) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("stats")
+    .insert([stat])
+    .select()
+    .single();
+
+  if (error) throw error;
+  revalidatePath("/");
+  revalidatePath("/admin/stats-timeline");
+  return data;
 }
 
-export async function updateStat(id: string, stat: Partial<DBStat>): Promise<DBStat> {
-  return await apiFetch<DBStat>(`/stats/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(stat),
-  });
+export async function updateStat(id: string, stat: Partial<DBStat>) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("stats")
+    .update(stat)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  revalidatePath("/");
+  revalidatePath("/admin/stats-timeline");
+  return data;
 }
 
-export async function deleteStat(id: string): Promise<void> {
-  await apiFetch<void>(`/stats/${id}`, {
-    method: "DELETE",
-  });
+export async function deleteStat(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("stats").delete().eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/");
+  revalidatePath("/admin/stats-timeline");
 }
 
-export async function reorderStats(items: Array<{ id: string; sort_order: number }>): Promise<void> {
-  await apiFetch<void>("/stats/reorder", {
-    method: "POST",
-    body: JSON.stringify(items),
-  });
+export async function reorderStats(items: Array<{ id: string; sort_order: number }>) {
+  const supabase = await createClient();
+  
+  // Perform updates in parallel
+  const promises = items.map((item) =>
+    supabase.from("stats").update({ sort_order: item.sort_order }).eq("id", item.id)
+  );
+  
+  await Promise.all(promises);
+  revalidatePath("/");
+  revalidatePath("/admin/stats-timeline");
 }

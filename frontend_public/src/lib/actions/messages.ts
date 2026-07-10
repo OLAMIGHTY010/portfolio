@@ -1,40 +1,58 @@
-import { apiFetch } from "../api-client";
-import type { MessageInput, Message } from "@/lib/types";
+"use server";
 
-export async function getMessages(): Promise<Message[]> {
-  try {
-    return await apiFetch<Message[]>("/messages");
-  } catch (err) {
-    console.warn("Failed to fetch messages from API:", err);
-    return [];
-  }
+import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
+import type { MessageInput } from "@/lib/types";
+
+export async function getMessages() {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("messages")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data;
 }
 
-export async function getUnreadMessageCount(): Promise<number> {
-  try {
-    const res = await apiFetch<{ count: number }>("/messages/unread-count");
-    return res.count;
-  } catch (err) {
-    console.warn("Failed to fetch unread message count from API:", err);
-    return 0;
-  }
+export async function getUnreadMessageCount() {
+  const supabase = await createClient();
+  const { count, error } = await supabase
+    .from("messages")
+    .select("*", { count: "exact", head: true })
+    .eq("read", false);
+
+  if (error) throw error;
+  return count || 0;
 }
 
-export async function sendMessage(message: MessageInput): Promise<Message> {
-  return await apiFetch<Message>("/messages", {
-    method: "POST",
-    body: JSON.stringify(message),
-  });
+export async function sendMessage(message: MessageInput) {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("messages")
+    .insert(message)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
 }
 
-export async function markMessageAsRead(id: string): Promise<void> {
-  await apiFetch<void>(`/messages/${id}/read`, {
-    method: "PUT",
-  });
+export async function markMessageAsRead(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("messages")
+    .update({ read: true })
+    .eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/admin/inbox");
 }
 
-export async function deleteMessage(id: string): Promise<void> {
-  await apiFetch<void>(`/messages/${id}`, {
-    method: "DELETE",
-  });
+export async function deleteMessage(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("messages").delete().eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/admin/inbox");
 }

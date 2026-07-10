@@ -20,8 +20,6 @@ const inter = Inter({
 
 import { getSiteSettings } from "@/lib/actions/settings";
 
-export const dynamic = "force-dynamic";
-
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
   
@@ -52,6 +50,8 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+import { Analytics } from "@vercel/analytics/react";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -67,16 +67,13 @@ export default async function RootLayout({
         <ThemeProvider>
           <TooltipProvider>
             <div className="relative min-h-screen flex flex-col">
-              {/* Professional Subtle Background Elements */}
-              <div className="fixed inset-0 z-[-2] mesh-gradient opacity-60 dark:opacity-100" />
-              <div className="fixed inset-0 z-[-1] grid-pattern" />
-              
               <Navbar siteName={settings.site_name} />
               <main className="flex-1">{children}</main>
               <Footer settings={settings} />
             </div>
           </TooltipProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );

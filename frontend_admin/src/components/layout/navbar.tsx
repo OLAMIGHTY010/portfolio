@@ -50,27 +50,36 @@ export function Navbar({ siteName }: NavbarProps) {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
-            <Link
-              href={SITE_CONFIG.url || "/"}
-              target="_blank"
-              className={cn(
-                "relative px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
-                "text-muted-foreground hover:text-primary"
-              )}
-            >
-              View Live Site ↗
-            </Link>
-            <Link
-              href="/admin"
-              className={cn(
-                "relative px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
-                pathname.startsWith("/admin")
-                  ? "text-primary bg-primary/10"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Admin Dashboard
-            </Link>
+            {NAV_ITEMS.map((item) => {
+              const isActive =
+                pathname === item.href ||
+                (item.href !== "/" && pathname.startsWith(item.href));
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "relative px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200",
+                    isActive
+                      ? "text-primary"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {item.label}
+                  {isActive && (
+                    <motion.div
+                      layoutId="navbar-indicator"
+                      className="absolute inset-0 bg-primary/10 rounded-lg -z-10"
+                      transition={{
+                        type: "spring",
+                        bounce: 0.2,
+                        duration: 0.6,
+                      }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Right side */}
@@ -133,41 +142,32 @@ export function Navbar({ siteName }: NavbarProps) {
 
                 {/* Links */}
                 <div className="flex-1 overflow-y-auto py-4">
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.05 }}
-                  >
-                    <Link
-                      href={SITE_CONFIG.url || "/"}
-                      target="_blank"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={cn(
-                        "block px-6 py-3 text-sm font-medium transition-colors",
-                        "text-muted-foreground hover:text-primary hover:bg-muted"
-                      )}
-                    >
-                      View Live Site ↗
-                    </Link>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 }}
-                  >
-                    <Link
-                      href="/admin"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={cn(
-                        "block px-6 py-3 text-sm font-medium transition-colors",
-                        pathname.startsWith("/admin")
-                          ? "text-primary bg-primary/5 border-r-2 border-primary"
-                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                      )}
-                    >
-                      Admin Dashboard
-                    </Link>
-                  </motion.div>
+                  {NAV_ITEMS.map((item, index) => {
+                    const isActive =
+                      pathname === item.href ||
+                      (item.href !== "/" && pathname.startsWith(item.href));
+                    return (
+                      <motion.div
+                        key={item.href}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                      >
+                        <Link
+                          href={item.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className={cn(
+                            "block px-6 py-3 text-sm font-medium transition-colors",
+                            isActive
+                              ? "text-primary bg-primary/5 border-r-2 border-primary"
+                              : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                          )}
+                        >
+                          {item.label}
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               </div>
             </motion.div>

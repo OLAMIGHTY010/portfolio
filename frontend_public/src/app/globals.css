@@ -158,8 +158,8 @@
     @apply bg-clip-text text-transparent;
     background-image: linear-gradient(
       135deg,
-      var(--primary) 0%,
-      var(--accent) 100%
+      hsl(var(--primary)) 0%,
+      hsl(var(--accent)) 100%
     );
   }
 
@@ -202,20 +202,11 @@
   /* Animated mesh background */
   .mesh-gradient {
     background-image:
-      radial-gradient(at 40% 20%, color-mix(in srgb, var(--primary) 8%, transparent) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, color-mix(in srgb, var(--accent) 6%, transparent) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, color-mix(in srgb, var(--primary) 5%, transparent) 0px, transparent 50%),
-      radial-gradient(at 80% 50%, color-mix(in srgb, var(--accent) 4%, transparent) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, color-mix(in srgb, var(--primary) 6%, transparent) 0px, transparent 50%);
-  }
-
-  /* Professional Grid Background */
-  .grid-pattern {
-    background-size: 40px 40px;
-    background-image: 
-      linear-gradient(to right, hsl(var(--foreground) / 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(var(--foreground) / 0.03) 1px, transparent 1px);
-    mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+      radial-gradient(at 40% 20%, hsl(var(--primary) / 0.08) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsl(var(--accent) / 0.06) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsl(var(--primary) / 0.05) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsl(var(--accent) / 0.04) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsl(var(--primary) / 0.06) 0px, transparent 50%);
   }
 }
 
