@@ -20,6 +20,8 @@ const inter = Inter({
 
 import { getSiteSettings } from "@/lib/actions/settings";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
   
@@ -50,8 +52,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-import { Analytics } from "@vercel/analytics/react";
-
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -73,7 +73,6 @@ export default async function RootLayout({
             </div>
           </TooltipProvider>
         </ThemeProvider>
-        <Analytics />
       </body>
     </html>
   );
