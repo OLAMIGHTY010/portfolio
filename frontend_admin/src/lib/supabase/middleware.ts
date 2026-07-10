@@ -37,21 +37,18 @@ export async function updateSession(request: NextRequest) {
   // Protect /admin routes
   if (request.nextUrl.pathname.startsWith("/admin")) {
     if (!user) {
-      // TEMPORARY PREVIEW BYPASS: Normally this redirects to /login
-      // const url = request.nextUrl.clone();
-      // url.pathname = "/login";
-      // url.searchParams.set("redirectTo", request.nextUrl.pathname);
-      // return NextResponse.redirect(url);
-      console.log("Preview bypass: allowing access to admin without session");
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("redirectTo", request.nextUrl.pathname);
+      return NextResponse.redirect(url);
     }
 
     // Check if user is admin
     const adminEmail = process.env.ADMIN_EMAIL;
     if (adminEmail && user && user.email !== adminEmail) {
-      // TEMPORARY PREVIEW BYPASS
-      // const url = request.nextUrl.clone();
-      // url.pathname = "/";
-      // return NextResponse.redirect(url);
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
     }
   }
 
