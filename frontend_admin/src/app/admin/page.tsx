@@ -96,7 +96,7 @@ export default function AdminOverview() {
         // In Supabase postgrest, relation missing usually returns a 404 status / code 'PGRST116' is not table missing,
         // but table missing returns a code like '42P01'.
         const code = error?.code;
-        const exists = code !== "42P01" && error?.message?.indexOf("does not exist") === -1;
+        const exists = !error || (code !== "42P01" && !error?.message?.includes("does not exist"));
         return { name, exists };
       });
 
