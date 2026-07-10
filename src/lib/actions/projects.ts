@@ -142,12 +142,15 @@ export async function syncGithubRepos(username: string) {
       const { error } = await supabase.from('projects').insert(newProject);
       if (error) {
         console.error("Failed to insert project:", error);
-        continue;
+        return { success: false, error: `Failed to insert ${slug}: ${error.message}` };
       }
       addedCount++;
     }
     
     revalidatePath('/admin/projects');
+    if (addedCount === 0 && repos.length > 0) {
+      return { success: false, error: `0 added. (Note: The database says these repositories already exist in the projects table!)` };
+    }
     return { success: true, added: addedCount };
   } catch (error: any) {
     return { success: false, error: error.message || 'Unknown error' };
