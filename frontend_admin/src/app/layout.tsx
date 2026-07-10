@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/layout/theme-provider";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
@@ -57,8 +55,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const settings = await getSiteSettings();
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -67,9 +63,7 @@ export default async function RootLayout({
         <ThemeProvider>
           <TooltipProvider>
             <div className="relative min-h-screen flex flex-col">
-              <Navbar siteName={settings.site_name} />
               <main className="flex-1">{children}</main>
-              <Footer settings={settings} />
             </div>
           </TooltipProvider>
         </ThemeProvider>
@@ -77,3 +71,4 @@ export default async function RootLayout({
     </html>
   );
 }
+
