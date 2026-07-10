@@ -217,7 +217,6 @@ export default function SettingsHub() {
             { id: "general", label: "General Config" },
             { id: "socials", label: "Socials & Links" },
             { id: "hero", label: "Hero Section" },
-            { id: "flowmart", label: "FlowMart Page" },
           ] as const
         ).map((tab) => (
           <button
@@ -447,8 +446,8 @@ export default function SettingsHub() {
                   </Button>
                 </div>
                 <div className="flex flex-wrap gap-1.5 pt-2">
-                  {settings.hero_roles.map((role, idx) => (
-                    <Badge key={idx} variant="secondary" className="flex items-center gap-1 text-sm py-1">
+                  {(settings.hero_roles || []).map((role, idx) => (
+                    <Badge key={idx} variant="secondary" className="flex items-center gap-1.5 text-sm py-1">
                       {role}
                       <button
                         type="button"
