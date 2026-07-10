@@ -22,16 +22,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, Github } from "lucide-react";
 import type { Project } from "@/lib/types";
 import { slugify } from "@/lib/utils";
 import { MarkdownEditor } from "@/components/ui/md-editor";
+import { syncGithubRepos } from "@/lib/actions/projects";
 
 export default function AdminProjects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [syncing, setSyncing] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [form, setForm] = useState({
@@ -64,6 +66,26 @@ export default function AdminProjects() {
       setProjects([]);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleSyncGithub() {
+    const username = prompt("Enter your GitHub username to sync repositories:", "OLAMIGHTY010");
+    if (!username) return;
+    
+    setSyncing(true);
+    try {
+      const result = await syncGithubRepos(username);
+      if (result.success) {
+        alert(`Successfully synced ${result.added} new repositories from GitHub!`);
+        fetchProjects();
+      } else {
+        alert("Failed to sync: " + result.error);
+      }
+    } catch (err: any) {
+      alert("Error: " + err.message);
+    } finally {
+      setSyncing(false);
     }
   }
 
@@ -143,7 +165,7 @@ export default function AdminProjects() {
 
       const payload = {
         title: form.title,
-        slug: form.slug || slugify(form.title),
+        slug: form.slug,
         description: form.description,
         case_study: form.case_study || null,
         image_url: form.image_url || null,
@@ -190,20 +212,27 @@ export default function AdminProjects() {
           <h1 className="text-2xl font-bold text-foreground">Projects</h1>
           <p className="text-muted-foreground mt-1">Manage your portfolio projects.</p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger render={<Button className="gap-2" />} onClick={openCreate}>
-              <Plus className="h-4 w-4" /> Add Project
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>
-                {editingProject ? "Edit Project" : "Add New Project"}
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4 pt-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Title</Label>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" className="gap-2" onClick={handleSyncGithub} disabled={syncing}>
+            {syncing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Github className="h-4 w-4" />}
+            Sync with GitHub
+          </Button>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2" onClick={openCreate}>
+                <Plus className="h-4 w-4" /> Add Project
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingProject ? "Edit Project" : "Add New Project"}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 pt-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Title</Label>
                   <Input
                     value={form.title}
                     onChange={(e) => setForm({ ...form, title: e.target.value, slug: slugify(e.target.value) })}

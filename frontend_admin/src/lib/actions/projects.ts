@@ -90,3 +90,62 @@ export async function deleteProject(id: string) {
   revalidatePath("/admin/projects");
   revalidatePath("/");
 }
+
+export async function syncGithubRepos(username: string) {
+  if (isPlaceholderConfig()) return { success: false, error: 'Cannot sync in placeholder mode' };
+  
+  try {
+    const res = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`, {
+      headers: { 'User-Agent': 'Portfolio-App' },
+      next: { revalidate: 0 }
+    });
+    
+    if (!res.ok) {
+      return { success: false, error: `GitHub API error: ${res.statusText}` };
+    }
+    
+    const repos = await res.json();
+    const supabase = await createClient();
+    
+    // Get existing projects to avoid duplicates
+    const { data: existingProjects } = await supabase.from('projects').select('slug, github_url');
+    
+    let addedCount = 0;
+    
+    for (const repo of repos) {
+      if (repo.fork) continue; // Skip forks
+      
+      const repoUrl = repo.html_url;
+      const slug = repo.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+      
+      // Check if project exists by github_url or slug
+      const exists = existingProjects?.some(p => p.github_url === repoUrl || p.slug === slug);
+      if (exists) continue;
+      
+      const techStack = [];
+      if (repo.language) techStack.push(repo.language);
+      
+      const newProject: ProjectInput = {
+        title: repo.name.replace(/[-_]/g, ' '),
+        slug,
+        description: repo.description || 'Synced from GitHub',
+        case_study: null,
+        image_url: null,
+        tech_stack: techStack,
+        github_url: repoUrl,
+        live_url: repo.homepage || null,
+        featured: false,
+        published: false, // Save as draft so they can review it
+        sort_order: 99,
+      };
+      
+      await supabase.from('projects').insert(newProject);
+      addedCount++;
+    }
+    
+    revalidatePath('/admin/projects');
+    return { success: true, added: addedCount };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'Unknown error' };
+  }
+}
