@@ -119,7 +119,7 @@ export function HomeClient({ settings, stats, featuredProjects }: HomeClientProp
             {/* Name */}
             <FadeIn delay={0.2}>
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-                <span className="gradient-text">{settings.hero_name}</span>
+                <span className="gradient-text">{settings.hero_name?.trim() ? settings.hero_name.trim() : "OLATUNBOSUN OLALEKAN"}</span>
               </h1>
             </FadeIn>
 

@@ -14,7 +14,7 @@ interface NavbarProps {
 }
 
 export function Navbar({ siteName }: NavbarProps) {
-  const displayBrand = siteName || SITE_CONFIG.name;
+  const displayBrand = siteName?.trim() ? siteName.trim() : SITE_CONFIG.name;
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

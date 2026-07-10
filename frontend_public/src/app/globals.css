@@ -155,12 +155,7 @@
 
   /* Gradient text */
   .gradient-text {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(
-      135deg,
-      hsl(var(--primary)) 0%,
-      hsl(var(--accent)) 100%
-    );
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/50;
   }
 
   /* Subtle glow */
