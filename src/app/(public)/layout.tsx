@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/layout/theme-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import "./globals.css";
+import "../globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
