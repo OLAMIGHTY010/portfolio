@@ -86,39 +86,39 @@ I believe the best technologists are those who understand the business deeply en
 
 export const TIMELINE: TimelineItem[] = [
   {
-    year: "2012",
-    title: "Primary Education",
-    institution: "Complete Child Academy",
+    year: "2016",
+    title: "National Diploma (ND)",
+    institution: "Rufus Giwa Polytechnic, Owo",
     description:
-      "Foundation years where curiosity and problem-solving skills were first nurtured.",
-  },
-  {
-    year: "2015",
-    title: "Secondary Education",
-    institution: "Owo High School",
-    description:
-      "Developed strong analytical thinking and a passion for mathematics and science.",
+      "Studied Computer Engineering Technology, building a strong foundation in hardware, software, and systems engineering.",
   },
   {
     year: "2019",
-    title: "Higher National Diploma",
-    institution: "Rufus Giwa Polytechnic",
+    title: "Higher National Diploma (HND)",
+    institution: "Rufus Giwa Polytechnic, Owo",
     description:
-      "Studied Computer Science, building a solid foundation in programming, databases, and systems thinking.",
+      "Advanced studies in Computer Engineering Technology, focusing on complex systems, programming, and IT infrastructure.",
   },
   {
     year: "2022",
-    title: "Tech Fellowship",
-    institution: "Learn2Earn Fellowship",
+    title: "Customer Service Officer",
+    institution: "Polaris Bank Plc",
     description:
-      "Intensive program focused on practical tech skills, business analysis, and professional development.",
+      "Managed high-volume customer inquiries and provided specialized technical support for digital banking platforms.",
   },
   {
-    year: "2023",
-    title: "Professional Deployment",
-    institution: "NJFP — Marina, Lagos",
+    year: "2024",
+    title: "Service Monitoring Officer",
+    institution: "Sterling Bank Plc",
     description:
-      "Deployed as a Service Monitoring Officer in the banking sector, handling real-time transaction monitoring and incident management.",
+      "Monitored critical core banking applications and digital payment services, preventing downtime through data analysis.",
+  },
+  {
+    year: "2025",
+    title: "Software Development Program",
+    institution: "Learn2Earn Fellowship",
+    description:
+      "Undertaking intensive software development training focused on modern full-stack technologies and industry best practices.",
   },
 ];
 
@@ -128,31 +128,85 @@ export const TIMELINE: TimelineItem[] = [
 export const EXPERIENCES: ExperienceItem[] = [
   {
     role: "Service Monitoring Officer",
-    company: "Banking Operations — Marina, Lagos",
-    period: "2023 — Present",
+    company: "Sterling Bank Plc",
+    period: "June 2024 — Present",
     location: "Lagos, Nigeria",
     description:
-      "Responsible for real-time monitoring of banking transactions, incident management, root cause analysis, and ensuring service availability across all channels.",
+      "Monitor critical core banking applications and digital payment services to ensure 99.9% system availability and optimal performance.",
     responsibilities: [
-      "Monitor real-time transaction flows across all banking channels (Mobile, USSD, Web, ATM, POS) to ensure service availability and performance",
-      "Detect, escalate, and manage incidents using structured escalation protocols, reducing mean time to resolution (MTTR)",
-      "Conduct root cause analysis (RCA) for service disruptions and document findings for post-incident reviews",
-      "Communicate with cross-functional stakeholders including engineering, operations, and management during critical incidents",
-      "Generate daily, weekly, and monthly service availability and performance reports for senior management",
-      "Maintain and improve monitoring dashboards using SQL queries and Power BI visualizations",
-      "Implement proactive monitoring alerts and threshold configurations to prevent incidents before they impact customers",
-      "Collaborate with the engineering team on system reliability improvements based on incident trends and pattern analysis",
+      "Monitor critical core banking applications and digital payment services using DataDog and enterprise APM tools.",
+      "Analyze high-volume transaction data and incident logs utilizing SQL and Excel to detect anomalies, isolate failure trends, and mitigate risks.",
+      "Design and deploy interactive Power BI dashboards tracking Key Performance Indicators (KPIs) and operational metrics.",
+      "Conduct deep-dive Root Cause Analysis (RCA) on critical application failures.",
+      "Collaborate with DevOps and infrastructure teams to implement permanent fixes."
     ],
     technologies: [
+      "DataDog",
+      "APM Tools",
       "SQL",
-      "Power BI",
-      "Python",
       "Excel",
-      "Jira",
-      "Grafana",
-      "Transaction Monitoring Systems",
+      "Power BI",
+      "PostgreSQL"
     ],
   },
+  {
+    role: "Low-Code / No-Code Automation Mentor",
+    company: "Lobby AI",
+    period: "2024",
+    location: "Lagos, Nigeria",
+    description:
+      "Mentored students in building complex, automated workflows without traditional programming.",
+    responsibilities: [
+      "Mentored students utilizing platforms such as Zapier, Airtable, and Make.",
+      "Developed curriculum and guided hands-on projects.",
+      "Empowered students to streamline business operations and reduce manual data entry tasks."
+    ],
+    technologies: [
+      "Zapier",
+      "Make",
+      "Airtable",
+      "n8n",
+      "Automation"
+    ],
+  },
+  {
+    role: "Customer Service Officer",
+    company: "Polaris Bank Plc",
+    period: "2022 — 2024",
+    location: "Lagos, Nigeria",
+    description:
+      "Managed high-volume customer inquiries and provided specialized technical support for digital banking platforms.",
+    responsibilities: [
+      "Provided specialized technical support for digital banking platforms, significantly boosting first-contact resolution rates.",
+      "Collaborated closely with backend operations, risk, and compliance teams.",
+      "Resolved complex transactional disputes.",
+      "Ensured strict policy and regulatory adherence."
+    ],
+    technologies: [
+      "CRM Tools",
+      "Core Banking Applications",
+      "Jira",
+      "Confluence"
+    ],
+  },
+  {
+    role: "Assistant Team Lead & Intern",
+    company: "3MTT",
+    period: "2024",
+    location: "Lagos, Nigeria",
+    description:
+      "Served as Assistant Team Lead for a cross-functional group of interns during the 3MTT program.",
+    responsibilities: [
+      "Directed the planning and development of the Community Safety Shield project.",
+      "Coordinated tasks and tracked milestones across the team.",
+      "Ensured successful delivery of the community initiative."
+    ],
+    technologies: [
+      "Project Management",
+      "Agile/Scrum",
+      "Team Leadership"
+    ],
+  }
 ];
 
 // ============================================================
