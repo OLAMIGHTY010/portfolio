@@ -86,18 +86,21 @@ export default function AdminCertificates() {
       const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();
       
-      const fileExt = file.name.split('.').pop();
+      const fileExt = file.name.split('.').pop() || '';
+      const isPdf = fileExt.toLowerCase() === 'pdf' || file.type === 'application/pdf';
+      const bucket = isPdf ? 'documents' : 'images';
+      
       const fileName = `certificate-${Math.random()}.${fileExt}`;
       const filePath = `certificates/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('images')
+        .from(bucket)
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
-        .from('images')
+        .from(bucket)
         .getPublicUrl(filePath);
 
       setForm({ ...form, image_url: publicUrl });

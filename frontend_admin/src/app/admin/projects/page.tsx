@@ -99,11 +99,14 @@ export default function AdminProjects() {
       const { createClient } = await import("@/lib/supabase/client");
       const supabase = createClient();
       
-      const fileExt = file.name.split(".").pop();
+      const fileExt = file.name.split(".").pop() || "";
+      const isPdf = fileExt.toLowerCase() === 'pdf' || file.type === 'application/pdf';
+      const bucket = isPdf ? 'documents' : 'images';
+      
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
       
       const { data, error } = await supabase.storage
-        .from("images")
+        .from(bucket)
         .upload(`projects/${fileName}`, file);
 
       if (error) {
@@ -112,7 +115,7 @@ export default function AdminProjects() {
       }
       
       const { data: publicUrlData } = supabase.storage
-        .from("images")
+        .from(bucket)
         .getPublicUrl(`projects/${fileName}`);
         
       setForm({ ...form, image_url: publicUrlData.publicUrl });
