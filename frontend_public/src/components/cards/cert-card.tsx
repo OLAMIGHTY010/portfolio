@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Award, ExternalLink, Calendar } from "lucide-react";
+import { Award, ExternalLink, Calendar, FileText } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatDate } from "@/lib/utils";
 import type { Certificate } from "@/lib/types";
@@ -16,12 +16,19 @@ export function CertCard({ certificate }: { certificate: Certificate }) {
         {/* Image area */}
         {certificate.image_url ? (
           <div className="aspect-[4/3] overflow-hidden bg-muted">
-            <img
-              src={certificate.image_url}
-              alt={certificate.name}
-              className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
-              loading="lazy"
-            />
+            {certificate.image_url.endsWith('.pdf') ? (
+              <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary/5 to-accent/5 text-muted-foreground group-hover:bg-primary/10 transition-colors duration-500">
+                <FileText className="h-16 w-16 mb-2 opacity-50 group-hover:opacity-80 transition-opacity" />
+                <span className="text-sm font-medium tracking-wider uppercase opacity-70 group-hover:opacity-100 transition-opacity">PDF Document</span>
+              </div>
+            ) : (
+              <img
+                src={certificate.image_url}
+                alt={certificate.name}
+                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+              />
+            )}
           </div>
         ) : (
           <div className="aspect-[4/3] bg-gradient-to-br from-primary/5 to-accent/5 flex items-center justify-center">
