@@ -22,9 +22,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Pencil, Trash2, Loader2, RefreshCw } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, RefreshCw, Image as ImageIcon } from "lucide-react";
 import type { Project } from "@/lib/types";
 import { slugify } from "@/lib/utils";
+import Image from "next/image";
 import { MarkdownEditor } from "@/components/ui/md-editor";
 import { syncGithubRepos } from "@/lib/actions/projects";
 
@@ -271,19 +272,24 @@ export default function AdminProjects() {
                     onChange={(e) => setForm({ ...form, image_url: e.target.value })}
                     placeholder="https://... or upload image"
                   />
-                  <div className="relative">
+                  <div className="relative w-32 shrink-0">
                     <Input
                       type="file"
                       accept="image/*"
                       onChange={handleImageUpload}
                       disabled={uploadingImage}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
-                    <Button type="button" variant="secondary" disabled={uploadingImage}>
+                    <Button type="button" variant="secondary" className="w-full" disabled={uploadingImage}>
                       {uploadingImage ? <Loader2 className="h-4 w-4 animate-spin" /> : "Upload"}
                     </Button>
                   </div>
                 </div>
+                {form.image_url && (
+                  <div className="mt-2 relative aspect-video w-40 rounded-md overflow-hidden border border-border">
+                    <Image src={form.image_url} alt="Project preview" fill className="object-cover" />
+                  </div>
+                )}
               </div>
               <div className="space-y-2">
                 <Label>Tech Stack (comma-separated)</Label>
@@ -342,6 +348,7 @@ export default function AdminProjects() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-16">Image</TableHead>
               <TableHead>Title</TableHead>
               <TableHead>Tech Stack</TableHead>
               <TableHead>Status</TableHead>
@@ -352,6 +359,7 @@ export default function AdminProjects() {
             {loading ? (
               [...Array(3)].map((_, i) => (
                 <TableRow key={i}>
+                  <TableCell><div className="h-4 w-10 bg-muted animate-pulse rounded" /></TableCell>
                   <TableCell><div className="h-4 w-40 bg-muted animate-pulse rounded" /></TableCell>
                   <TableCell><div className="h-4 w-24 bg-muted animate-pulse rounded" /></TableCell>
                   <TableCell><div className="h-4 w-16 bg-muted animate-pulse rounded" /></TableCell>
@@ -360,13 +368,24 @@ export default function AdminProjects() {
               ))
             ) : projects.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
-                  No projects yet. Click &quot;Add Project&quot; to create one.
+                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                  No projects found. Sync with GitHub or add one manually!
                 </TableCell>
               </TableRow>
             ) : (
               projects.map((project) => (
                 <TableRow key={project.id}>
+                  <TableCell>
+                    {project.image_url ? (
+                      <div className="relative h-10 w-10 rounded overflow-hidden border border-border">
+                        <Image src={project.image_url} alt={project.title} fill className="object-cover" />
+                      </div>
+                    ) : (
+                      <div className="h-10 w-10 rounded bg-muted flex items-center justify-center border border-border">
+                        <ImageIcon className="h-4 w-4 text-muted-foreground opacity-50" />
+                      </div>
+                    )}
+                  </TableCell>
                   <TableCell className="font-medium">
                     {project.title}
                     {project.featured && (

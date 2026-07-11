@@ -19,9 +19,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, Image as ImageIcon } from "lucide-react";
 import type { Certificate } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
+import Image from "next/image";
 
 export default function AdminCertificates() {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
@@ -29,11 +30,13 @@ export default function AdminCertificates() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [editing, setEditing] = useState<Certificate | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [form, setForm] = useState({
     name: "",
     organization: "",
     date_achieved: "",
     verification_url: "",
+    image_url: "",
   });
 
   useEffect(() => {
@@ -58,7 +61,7 @@ export default function AdminCertificates() {
 
   function openCreate() {
     setEditing(null);
-    setForm({ name: "", organization: "", date_achieved: "", verification_url: "" });
+    setForm({ name: "", organization: "", date_achieved: "", verification_url: "", image_url: "" });
     setDialogOpen(true);
   }
 
@@ -69,8 +72,42 @@ export default function AdminCertificates() {
       organization: cert.organization,
       date_achieved: cert.date_achieved,
       verification_url: cert.verification_url || "",
+      image_url: cert.image_url || "",
     });
     setDialogOpen(true);
+  }
+
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    
+    setUploadingImage(true);
+    try {
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      
+      const fileExt = file.name.split('.').pop();
+      const fileName = `certificate-${Math.random()}.${fileExt}`;
+      const filePath = `certificates/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('images')
+        .getPublicUrl(filePath);
+
+      setForm({ ...form, image_url: publicUrl });
+      alert("Image uploaded successfully!");
+    } catch (error: any) {
+      console.error('Error uploading image:', error);
+      alert("Error uploading image: " + (error.message || "Unknown error"));
+    } finally {
+      setUploadingImage(false);
+    }
   }
 
   async function handleSave() {
@@ -83,6 +120,7 @@ export default function AdminCertificates() {
         organization: form.organization,
         date_achieved: form.date_achieved,
         verification_url: form.verification_url || null,
+        image_url: form.image_url || null,
       };
 
       if (editing) {
@@ -144,6 +182,29 @@ export default function AdminCertificates() {
                 <Label>Verification URL</Label>
                 <Input value={form.verification_url} onChange={(e) => setForm({ ...form, verification_url: e.target.value })} placeholder="https://credly.com/..." />
               </div>
+              <div className="space-y-2">
+                <Label>Certificate Image</Label>
+                <div className="flex gap-2">
+                  <Input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="https://..." />
+                  <div className="relative w-32 shrink-0">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
+                      onChange={handleImageUpload}
+                      disabled={uploadingImage}
+                    />
+                    <Button type="button" variant="secondary" className="w-full" disabled={uploadingImage}>
+                      {uploadingImage ? <Loader2 className="h-4 w-4 animate-spin" /> : "Upload"}
+                    </Button>
+                  </div>
+                </div>
+                {form.image_url && (
+                  <div className="mt-2 relative aspect-video w-40 rounded-md overflow-hidden border border-border">
+                    <Image src={form.image_url} alt="Certificate preview" fill className="object-cover" />
+                  </div>
+                )}
+              </div>
               <Button onClick={handleSave} className="w-full gap-2" disabled={saving}>
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 {editing ? "Update" : "Create"}
@@ -157,6 +218,7 @@ export default function AdminCertificates() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-16">Image</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Organization</TableHead>
               <TableHead>Date</TableHead>
@@ -175,13 +237,24 @@ export default function AdminCertificates() {
               ))
             ) : certificates.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
+                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
                   No certificates yet.
                 </TableCell>
               </TableRow>
             ) : (
               certificates.map((cert) => (
                 <TableRow key={cert.id}>
+                  <TableCell>
+                    {cert.image_url ? (
+                      <div className="relative h-10 w-10 rounded overflow-hidden border border-border">
+                        <Image src={cert.image_url} alt={cert.name} fill className="object-cover" />
+                      </div>
+                    ) : (
+                      <div className="h-10 w-10 rounded bg-muted flex items-center justify-center border border-border">
+                        <ImageIcon className="h-4 w-4 text-muted-foreground opacity-50" />
+                      </div>
+                    )}
+                  </TableCell>
                   <TableCell className="font-medium">{cert.name}</TableCell>
                   <TableCell className="text-muted-foreground">{cert.organization}</TableCell>
                   <TableCell className="text-muted-foreground">{formatDate(cert.date_achieved)}</TableCell>
