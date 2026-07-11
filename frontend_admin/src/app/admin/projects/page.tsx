@@ -290,7 +290,7 @@ export default function AdminProjects() {
                 </div>
                 {form.image_url && (
                   <div className="mt-2 relative aspect-video w-40 rounded-md overflow-hidden border border-border">
-                    {form.image_url.endsWith('.pdf') ? (
+                    {form.image_url.toLowerCase().includes('.pdf') ? (
                       <div className="w-full h-full bg-muted flex flex-col items-center justify-center text-muted-foreground">
                         <FileText className="h-6 w-6 mb-1" />
                         <span className="text-[10px]">PDF Document</span>
@@ -388,7 +388,7 @@ export default function AdminProjects() {
                   <TableCell>
                     {project.image_url ? (
                       <div className="relative h-10 w-10 rounded overflow-hidden border border-border bg-muted flex items-center justify-center">
-                        {project.image_url.endsWith('.pdf') ? (
+                        {project.image_url.toLowerCase().includes('.pdf') ? (
                           <FileText className="h-5 w-5 text-muted-foreground" />
                         ) : (
                           <Image src={project.image_url} alt={project.title} fill className="object-cover" />

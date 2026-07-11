@@ -16,7 +16,7 @@ export function CertCard({ certificate }: { certificate: Certificate }) {
         {/* Image area */}
         {certificate.image_url ? (
           <div className="aspect-[4/3] overflow-hidden bg-muted">
-            {certificate.image_url.endsWith('.pdf') ? (
+            {certificate.image_url.toLowerCase().includes('.pdf') ? (
               <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary/5 to-accent/5 text-muted-foreground group-hover:bg-primary/10 transition-colors duration-500">
                 <FileText className="h-16 w-16 mb-2 opacity-50 group-hover:opacity-80 transition-opacity" />
                 <span className="text-sm font-medium tracking-wider uppercase opacity-70 group-hover:opacity-100 transition-opacity">PDF Document</span>

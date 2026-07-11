@@ -18,7 +18,7 @@ export function ProjectCard({ project }: { project: Project }) {
           {/* Image area */}
           <div className="relative aspect-video bg-gradient-to-br from-primary/10 to-accent/10 overflow-hidden">
             {project.image_url ? (
-              project.image_url.endsWith('.pdf') ? (
+              project.image_url.toLowerCase().includes('.pdf') ? (
                 <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary/5 to-accent/5 text-muted-foreground group-hover:bg-primary/10 transition-colors duration-500">
                   <FileText className="h-20 w-20 mb-2 opacity-50 group-hover:opacity-80 transition-opacity" />
                   <span className="text-sm font-medium tracking-wider uppercase opacity-70 group-hover:opacity-100 transition-opacity">PDF Document</span>
