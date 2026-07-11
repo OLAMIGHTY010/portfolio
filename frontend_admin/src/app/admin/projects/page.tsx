@@ -22,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Pencil, Trash2, Loader2, RefreshCw, Image as ImageIcon } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, RefreshCw, Image as ImageIcon, FileText } from "lucide-react";
 import type { Project } from "@/lib/types";
 import { slugify } from "@/lib/utils";
 import Image from "next/image";
@@ -275,7 +275,7 @@ export default function AdminProjects() {
                   <div className="relative w-32 shrink-0">
                     <Input
                       type="file"
-                      accept="image/*"
+                      accept="image/*,.pdf"
                       onChange={handleImageUpload}
                       disabled={uploadingImage}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
@@ -287,7 +287,14 @@ export default function AdminProjects() {
                 </div>
                 {form.image_url && (
                   <div className="mt-2 relative aspect-video w-40 rounded-md overflow-hidden border border-border">
-                    <Image src={form.image_url} alt="Project preview" fill className="object-cover" />
+                    {form.image_url.endsWith('.pdf') ? (
+                      <div className="w-full h-full bg-muted flex flex-col items-center justify-center text-muted-foreground">
+                        <FileText className="h-6 w-6 mb-1" />
+                        <span className="text-[10px]">PDF Document</span>
+                      </div>
+                    ) : (
+                      <Image src={form.image_url} alt="Project preview" fill className="object-cover" />
+                    )}
                   </div>
                 )}
               </div>
@@ -377,8 +384,12 @@ export default function AdminProjects() {
                 <TableRow key={project.id}>
                   <TableCell>
                     {project.image_url ? (
-                      <div className="relative h-10 w-10 rounded overflow-hidden border border-border">
-                        <Image src={project.image_url} alt={project.title} fill className="object-cover" />
+                      <div className="relative h-10 w-10 rounded overflow-hidden border border-border bg-muted flex items-center justify-center">
+                        {project.image_url.endsWith('.pdf') ? (
+                          <FileText className="h-5 w-5 text-muted-foreground" />
+                        ) : (
+                          <Image src={project.image_url} alt={project.title} fill className="object-cover" />
+                        )}
                       </div>
                     ) : (
                       <div className="h-10 w-10 rounded bg-muted flex items-center justify-center border border-border">
