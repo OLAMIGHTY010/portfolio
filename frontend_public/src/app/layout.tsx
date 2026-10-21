@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { AiChatModal } from "@/components/chat/ai-chat-modal";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
@@ -70,6 +71,7 @@ export default async function RootLayout({
               <Navbar siteName={settings.site_name} resumeUrl={settings.resume_url} />
               <main className="flex-1">{children}</main>
               <Footer settings={settings} />
+              <AiChatModal />
             </div>
           </TooltipProvider>
         </ThemeProvider>

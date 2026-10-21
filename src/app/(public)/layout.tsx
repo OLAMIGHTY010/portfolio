@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { AiChatModal } from "@/components/chat/ai-chat-modal";
 import { getSiteSettings } from "@/lib/actions/settings";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -16,6 +17,7 @@ export default async function PublicLayout({
         <Navbar siteName={settings.site_name} resumeUrl={settings.resume_url} />
         <main className="flex-1">{children}</main>
         <Footer settings={settings} />
+        <AiChatModal />
       </div>
       <Analytics />
     </>
