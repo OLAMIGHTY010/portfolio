@@ -4,20 +4,23 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
+import { CommandPalette } from "./command-palette";
 import { NAV_ITEMS, SITE_CONFIG } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
   siteName?: string;
+  resumeUrl?: string;
 }
 
-export function Navbar({ siteName }: NavbarProps) {
+export function Navbar({ siteName, resumeUrl }: NavbarProps) {
   const displayBrand = siteName?.trim() ? siteName.trim() : SITE_CONFIG.name;
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [commandOpen, setCommandOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -83,7 +86,33 @@ export function Navbar({ siteName }: NavbarProps) {
           </div>
 
           {/* Right side */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Command Palette Trigger */}
+            <button
+              onClick={() => setCommandOpen(true)}
+              className={cn(
+                "hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground",
+                "bg-muted/60 hover:bg-muted border border-border/70 rounded-full transition-all duration-200",
+                "hover:border-primary/40 hover:text-foreground shadow-xs"
+              )}
+              aria-label="Open Command Menu (Cmd+K)"
+            >
+              <Search className="h-3.5 w-3.5" />
+              <span>Search</span>
+              <kbd className="pointer-events-none inline-flex h-4 select-none items-center gap-0.5 rounded border border-border/80 bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+                <span className="text-[9px]">⌘</span>K
+              </kbd>
+            </button>
+
+            {/* Mobile search icon */}
+            <button
+              onClick={() => setCommandOpen(true)}
+              className="sm:hidden h-9 w-9 rounded-full border border-border bg-background flex items-center justify-center hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              aria-label="Search"
+            >
+              <Search className="h-4 w-4" />
+            </button>
+
             <ThemeToggle />
 
             {/* Mobile menu button */}
@@ -174,6 +203,13 @@ export function Navbar({ siteName }: NavbarProps) {
           </>
         )}
       </AnimatePresence>
+
+      {/* Global Command Palette (Cmd + K / Ctrl + K) */}
+      <CommandPalette
+        open={commandOpen}
+        onOpenChange={setCommandOpen}
+        resumeUrl={resumeUrl}
+      />
     </>
   );
 }

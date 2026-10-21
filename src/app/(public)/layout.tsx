@@ -13,7 +13,7 @@ export default async function PublicLayout({
   return (
     <>
       <div className="relative min-h-screen flex flex-col">
-        <Navbar siteName={settings.site_name} />
+        <Navbar siteName={settings.site_name} resumeUrl={settings.resume_url} />
         <main className="flex-1">{children}</main>
         <Footer settings={settings} />
       </div>
