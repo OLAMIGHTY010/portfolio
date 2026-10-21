@@ -1,14 +1,13 @@
 "use server";
 
-import { Resend } from "resend";
 import { getSiteSettings } from "./settings";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function sendContactEmail(formData: { name: string; email: string; body: string }) {
-  if (!process.env.RESEND_API_KEY) {
-    console.warn("RESEND_API_KEY is not set in environment variables");
-    return { error: "Email configuration is missing on server." };
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!apiKey) {
+    console.warn("RESEND_API_KEY is not configured in environment variables.");
+    return { error: "Email configuration is missing on server. Please add RESEND_API_KEY to your Vercel project environment variables." };
   }
 
   try {
@@ -20,15 +19,21 @@ export async function sendContactEmail(formData: { name: string; email: string; 
       console.warn("Could not fetch site settings email:", e);
     }
 
-    // Default to verified Resend recipient or configured email
+    // Default to verified recipient
     const toEmail = process.env.CONTACT_NOTIFICATION_EMAIL || settingsEmail || "nanicomlekan111@gmail.com";
 
-    const data = await resend.emails.send({
-      from: "Portfolio Contact <onboarding@resend.dev>",
-      to: [toEmail],
-      reply_to: formData.email,
-      subject: `💼 New Message from ${formData.name}`,
-      html: `
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Portfolio Contact <onboarding@resend.dev>",
+        to: [toEmail],
+        reply_to: formData.email,
+        subject: `💼 New Message from ${formData.name}`,
+        html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">
           <h2 style="color: #0f172a; margin-top: 0;">New Message Received</h2>
           <p style="color: #64748b; font-size: 14px;">Someone submitted the contact form on your portfolio website.</p>
@@ -47,11 +52,14 @@ export async function sendContactEmail(formData: { name: string; email: string; 
           <p style="color: #94a3b8; font-size: 12px; margin: 0;">Sent automatically from your Portfolio CMS via Resend.</p>
         </div>
       `,
+      }),
     });
 
-    if (data.error) {
-      console.error("Resend API Error:", data.error);
-      return { error: data.error.message };
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Resend API Error:", data);
+      return { error: data?.message || "Failed to send email." };
     }
 
     return { success: true };

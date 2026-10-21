@@ -19,14 +19,13 @@ import {
   Check,
   Sun,
   Moon,
-  Github,
-  Linkedin,
   Activity,
   BarChart3,
   Terminal,
   ArrowRight,
   X,
 } from "lucide-react";
+import { GithubIcon, LinkedinIcon } from "@/components/icons";
 
 interface CommandItem {
   id: string;
@@ -206,7 +205,7 @@ export function CommandPalette({ open, onOpenChange, resumeUrl = "/resume.pdf" }
       title: "GitHub Profile",
       description: "github.com/OLAMIGHTY010",
       category: "Social",
-      icon: Github,
+      icon: GithubIcon,
       perform: () => { window.open("https://github.com/OLAMIGHTY010", "_blank"); close(); },
       keywords: ["git", "code", "repositories", "open source"],
     },
@@ -215,7 +214,7 @@ export function CommandPalette({ open, onOpenChange, resumeUrl = "/resume.pdf" }
       title: "LinkedIn Profile",
       description: "linkedin.com/in/olatunbosun-olalekan",
       category: "Social",
-      icon: Linkedin,
+      icon: LinkedinIcon,
       perform: () => { window.open("https://www.linkedin.com/in/olatunbosun-olalekan/", "_blank"); close(); },
       keywords: ["network", "profile", "connect"],
     },
