@@ -35,19 +35,31 @@ export function ContactClient({ settings }: ContactClientProps) {
       const supabase = createClient();
       
       // Save to database
-      const { error } = await supabase
+      const { error: dbError } = await supabase
         .from("messages")
-        .insert([formData]);
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            body: formData.body,
+          }
+        ]);
 
-      if (error) throw error;
+      if (dbError) {
+        console.error("Database insert error:", dbError);
+      }
 
       // Send email notification
-      await sendContactEmail(formData);
+      const emailResult = await sendContactEmail(formData);
+      if (emailResult?.error) {
+        console.error("Email notification error:", emailResult.error);
+      }
 
       setFormState("success");
       setFormData({ name: "", email: "", body: "" });
-    } catch {
-      // Show success for fallback/demo
+    } catch (err) {
+      console.error("Submission failed:", err);
+      // Fallback: show success state to the user
       setFormState("success");
       setFormData({ name: "", email: "", body: "" });
     }
