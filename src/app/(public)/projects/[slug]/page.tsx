@@ -73,6 +73,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const project = await getProject(slug);
   if (!project) return { title: "Project Not Found" };
   
+  const ogImageUrl =
+    project.image_url && !project.image_url.includes(".pdf")
+      ? project.image_url
+      : `/api/og?title=${encodeURIComponent(project.title)}&description=${encodeURIComponent(project.description)}&category=CASE%20STUDY&tags=${encodeURIComponent(project.tech_stack?.join(",") || "")}`;
+
   return {
     title: project.title,
     description: project.description,
@@ -80,22 +85,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: project.title,
       description: project.description,
       type: "article",
-      ...(project.image_url && {
-        images: [
-          {
-            url: project.image_url,
-            width: 1200,
-            height: 630,
-            alt: project.title,
-          },
-        ],
-      }),
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: project.title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: project.title,
       description: project.description,
-      ...(project.image_url && { images: [project.image_url] }),
+      images: [ogImageUrl],
     },
   };
 }

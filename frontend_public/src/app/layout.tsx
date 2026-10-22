@@ -38,11 +38,20 @@ export async function generateMetadata(): Promise<Metadata> {
       title: settings.site_title,
       description: settings.site_description,
       siteName: settings.site_name,
+      images: [
+        {
+          url: "/api/og",
+          width: 1200,
+          height: 630,
+          alt: settings.site_title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: settings.site_title,
       description: settings.site_description,
+      images: ["/api/og"],
     },
     robots: {
       index: true,
