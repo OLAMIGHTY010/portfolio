@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import type { SiteSettings } from "@/lib/actions/settings";
-import { sendContactEmail } from "@/lib/actions/email";
 
 interface ContactClientProps {
   settings: SiteSettings;
@@ -31,28 +30,17 @@ export function ContactClient({ settings }: ContactClientProps) {
     setFormState("loading");
 
     try {
-      const { createClient } = await import("@/lib/supabase/client");
-      const supabase = createClient();
-      
-      // Save to database
-      const { error: dbError } = await supabase
-        .from("messages")
-        .insert([
-          {
-            name: formData.name,
-            email: formData.email,
-            body: formData.body,
-          }
-        ]);
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-      if (dbError) {
-        console.error("Database insert error:", dbError);
-      }
-
-      // Send email notification
-      const emailResult = await sendContactEmail(formData);
-      if (emailResult?.error) {
-        console.error("Email notification error:", emailResult.error);
+      if (!response.ok) {
+        const errJson = await response.json().catch(() => ({}));
+        console.warn("Contact form submission response:", errJson);
       }
 
       setFormState("success");
